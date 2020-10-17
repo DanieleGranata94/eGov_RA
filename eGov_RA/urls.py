@@ -18,12 +18,13 @@ from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static
 
-from parsingBPMN.views import upload, process_view
+from parsingBPMN.views import upload, process_view, delete
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', upload, name='upload'),
     path('process_view', process_view, name='process_view'),
+    path('delete/<int:pk>', delete, name='delete')
 ]
 
 if settings.DEBUG:

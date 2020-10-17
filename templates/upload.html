@@ -13,7 +13,9 @@
         <thead>
             <tr>
                 <th>Name</th>
-                <th>Download</th>
+                <th>Download file</th>
+                <th>Select file</th>
+                <th>Delete file</th>
             </tr>
         </thead>
         <tbody>
@@ -22,8 +24,19 @@
                     <td> {{ process.name }}</td>
                     <td>
                         <a href="{{ process.xml.url }}" class="btn btn-primary btn-sm">
-                            Download xml
+                            Download file
                         </a>
+                    </td>
+                    <td>
+                        <a href="process_view" class="btn btn-primary btn-sm">
+                            Select file
+                        </a>
+                    </td>
+                    <td>
+                        <form method="POST" action="{% url 'delete' process.pk %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger btn-sm">Delete file</button>
+                        </form>
                     </td>
                 </tr>
             {% endfor %}

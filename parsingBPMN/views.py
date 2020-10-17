@@ -6,17 +6,6 @@ from .models import Process
 
 # Create your views here.
 
-#def upload(request):
-#    context = {}
-#    if request.method =='POST':
-#        uploaded_file = request.FILES['process_file']
-#        fs = FileSystemStorage()
-#        name = fs.save(uploaded_file.name, uploaded_file)
-#    return render(request,'upload.html')
-
-def process_list(request):
-    return render(request,'upload.html')
-
 def upload(request):
     if request.method == 'POST':
         form = ProcessForm(request.POST, request.FILES)
@@ -29,6 +18,12 @@ def upload(request):
     return render(request,'upload.html',{
         'form':form,'processes':processes
     })
+
+def delete(request,pk):
+    if request.method == 'POST':
+        process = Process.objects.get(pk=pk)
+        process.delete()
+    return redirect('upload')
 
 def process_view(request):
     return render(request,'process_view.html')
