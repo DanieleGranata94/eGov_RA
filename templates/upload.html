@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>Upload process</h1>
+      <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+          {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Upload file</button>
+      </form>
+
+    <h1>Uploaded process</h1>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Download</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for process in processes %}
+                <tr>
+                    <td> {{ process.name }}</td>
+                    <td>
+                        <a href="{{ process.xml.url }}" class="btn btn-primary btn-sm">
+                            Download xml
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}

@@ -1,0 +1,7 @@
+PARTE "TEORICA":
+-studiare django(?) importando anche il progetto di Di Leva.
+
+
+PARTE OPERATIVA:
+-sniffare json con postman
+-creare bitbucket
