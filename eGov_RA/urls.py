@@ -23,7 +23,7 @@ from parsingBPMN.views import upload, process_view, delete
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', upload, name='upload'),
-    path('process_view', process_view, name='process_view'),
+    path('process_view/<int:pk>', process_view, name='process_view'),
     path('delete/<int:pk>', delete, name='delete')
 ]
 

@@ -1,5 +1,20 @@
 {% extends 'base.html' %}
 
 {% block content %}
-
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Task names</th>
+            <th>Task types</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for info in process_info %}
+            <tr>
+                <td> {{ info.0 }}</td>
+                <td> {{ info.1 }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
 {% endblock %}

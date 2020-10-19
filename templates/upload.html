@@ -28,9 +28,10 @@
                         </a>
                     </td>
                     <td>
-                        <a href="process_view" class="btn btn-primary btn-sm">
-                            Select file
-                        </a>
+                        <form method="POST" action="{% url 'process_view' process.pk %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-primary btn-sm">Select file</button>
+                        </form>
                     </td>
                     <td>
                         <form method="POST" action="{% url 'delete' process.pk %}">
