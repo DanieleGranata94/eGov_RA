@@ -35,13 +35,21 @@ def process_view(request,pk):
     lista = bpmn_graph.get_nodes()
     task_name = []
     task_type = []
+    task_attribute = []
     for tuple in lista:
         for dizionario in tuple:
             if type(dizionario) is dict:
                 if dizionario['type'].endswith("Task"):
+                    list_attributes = []
                     task_name.append(dizionario['node_name'])
                     task_type.append(dizionario['type'])
-    process_info = zip(task_name,task_type)
+                    if not dizionario['attribute']:
+                        task_attribute.append("empty")
+                    else:
+                        for e in dizionario['attribute']:
+                            list_attributes.append(e)
+                        task_attribute.append(list_attributes)
+    process_info = zip(task_name,task_type,task_attribute)
     return render(request,'process_view.html',{
         'process_info':process_info
     })

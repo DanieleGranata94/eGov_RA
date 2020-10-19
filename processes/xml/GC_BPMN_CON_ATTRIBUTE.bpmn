@@ -118,7 +118,7 @@
     <bpmn:userTask id="Activity_17p77v3" name="call the student">
       <bpmn:incoming>Flow_10r8955</bpmn:incoming>
       <bpmn:outgoing>Flow_1ytml0m</bpmn:outgoing>
-	  <bpmn:attribute name="Communication_tipology" type="String" default="##PEC_communication"/>
+	  <bpmn:attribute name="Application_tipology" type="String" default="##Offline">Offline</bpmn:attribute>
     </bpmn:userTask>
     <bpmn:endEvent id="Event_000jpqc">
       <bpmn:incoming>Flow_1ytml0m</bpmn:incoming>
@@ -163,6 +163,8 @@
     <bpmn:serviceTask id="Activity_1xw79jf" name="Forward data: from Office to Student">
       <bpmn:incoming>Flow_12h7ypj</bpmn:incoming>
       <bpmn:outgoing>Flow_0qvwtqv</bpmn:outgoing>
+	  <bpmn:attribute name="Service_tipology" type="String" default="##Statefull">Statefull</bpmn:attribute>
+	  <bpmn:attribute name="Service_tipology" type="String" default="##Statefull">Stateless</bpmn:attribute>
     </bpmn:serviceTask>
     <bpmn:sequenceFlow id="Flow_12h7ypj" sourceRef="Event_11w40yf" targetRef="Activity_1xw79jf" />
     <bpmn:endEvent id="Event_0somxud">
