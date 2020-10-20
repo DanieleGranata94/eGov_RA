@@ -4,23 +4,28 @@
     <table class="table">
         <thead>
         <tr>
-            <th>Task names</th>
-            <th>Task types</th>
-            <th>Task attributes</th>
+            <th>Asset names</th>
+            <th>Asset types</th>
+            <!--<th>Asset attributes</th>-->
         </tr>
         </thead>
         <tbody>
-        {% for info in process_info %}
+        {% for task in task_list %}
             <tr>
-                <td> {{ info.0 }}</td>
-                <td> {{ info.1 }}</td>
-                {% if info.2 != 'empty' %}
+                <td>
+                    <form method="POST" action="{% url 'task_enrichment' task.pk %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-primary btn-sm">{{ task.name }}</button>
+                    </form>
+                </td>
+                <td> {{ task.task_type }}</td>
+                <!--{% if info.1 != 'empty' %}
                     <td>
-                    {{ info.2 }}
+                    {{ info.1 }}
                     </td>
                 {% else %}
                     <td> {{ '' }}</td>
-                {% endif %}
+                {% endif %}-->
             </tr>
         {% endfor %}
         </tbody>

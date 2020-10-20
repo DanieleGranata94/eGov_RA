@@ -17,3 +17,15 @@ class Process(models.Model):
     def delete(self, *args, **kwargs):
         self.xml.delete()
         super().delete(*args, **kwargs)
+
+class Task(models.Model):
+    name = models.CharField(max_length=100)
+    task_type = models.CharField(max_length=100)
+    process = models.ForeignKey(Process, on_delete=models.CASCADE)
+
+    class Meta:
+        verbose_name="Task"
+        verbose_name_plural="Tasks"
+
+    def __str__(self):
+        return self.name
