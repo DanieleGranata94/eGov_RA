@@ -6,26 +6,26 @@
         <tr>
             <th>Asset names</th>
             <th>Asset types</th>
-            <!--<th>Asset attributes</th>-->
+            <th>Asset attributes</th>
         </tr>
         </thead>
         <tbody>
-        {% for task in task_list %}
+        {% for task in task_info %}
             <tr>
                 <td>
-                    <form method="POST" action="{% url 'task_enrichment' task.pk %}">
+                    <form method="POST" action="{% url 'task_enrichment' task.0.pk %}">
                             {% csrf_token %}
-                            <button type="submit" class="btn btn-primary btn-sm">{{ task.name }}</button>
+                            <button type="submit" class="btn btn-primary btn-sm">{{ task.0.name }}</button>
                     </form>
                 </td>
-                <td> {{ task.task_type }}</td>
-                <!--{% if info.1 != 'empty' %}
+                <td> {{ task.0.task_type }}</td>
+                {% if task.1 != 'empty' %}
                     <td>
-                    {{ info.1 }}
+                    {{ task.1 }}
                     </td>
                 {% else %}
                     <td> {{ '' }}</td>
-                {% endif %}-->
+                {% endif %}
             </tr>
         {% endfor %}
         </tbody>

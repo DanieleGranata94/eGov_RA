@@ -18,13 +18,16 @@ from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static
 
-from parsingBPMN.views import upload, process_view, delete, task_enrichment
+from parsingBPMN.views import process_view, task_enrichment, bpmn_process_management, system_management, \
+    delete_process, delete_system
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', upload, name='upload'),
+    path('', system_management, name='system_management'),
+    path('bpmn_process_management/<int:pk>', bpmn_process_management, name='bpmn_process_management'),
     path('process_view/<int:pk>', process_view, name='process_view'),
-    path('delete/<int:pk>', delete, name='delete'),
+    path('delete_process/<int:pk>', delete_process, name='delete_process'),
+    path('delete_system/<int:pk>', delete_system, name='delete_system'),
     path('task_enrichment/<int:task_id>', task_enrichment, name='task_enrichment'),
 ]
 

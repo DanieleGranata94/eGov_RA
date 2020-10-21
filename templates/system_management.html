@@ -1,40 +1,35 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h1>Upload process</h1>
+
+    <h1>Create system</h1>
       <form method="POST" enctype="multipart/form-data">
         {% csrf_token %}
           {{ form.as_p }}
-        <button type="submit" class="btn btn-primary">Upload file</button>
+        <button type="submit" class="btn btn-primary">Create</button>
       </form>
 
-    <h1>Uploaded process</h1>
+    <h1>Uploaded BPMN processes</h1>
     <table class="table">
         <thead>
             <tr>
                 <th>Name</th>
-                <th>Download file</th>
                 <th>Select file</th>
                 <th>Delete file</th>
             </tr>
         </thead>
         <tbody>
-            {% for process in processes %}
+            {% for system in systems %}
                 <tr>
-                    <td> {{ process.name }}</td>
+                    <td> {{ system.name }}</td>
                     <td>
-                        <a href="{{ process.xml.url }}" class="btn btn-primary btn-sm">
-                            Download file
-                        </a>
-                    </td>
-                    <td>
-                        <form method="POST" action="{% url 'process_view' process.pk %}">
+                        <form method="POST" action="{% url 'bpmn_process_management' system.pk %}">
                             {% csrf_token %}
                             <button type="submit" class="btn btn-primary btn-sm">Select file</button>
                         </form>
                     </td>
                     <td>
-                        <form method="POST" action="{% url 'delete' process.pk %}">
+                        <form method="POST" action="{% url 'delete_system' system.pk %}">
                             {% csrf_token %}
                             <button type="submit" class="btn btn-danger btn-sm">Delete file</button>
                         </form>
