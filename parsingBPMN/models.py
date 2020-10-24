@@ -13,6 +13,12 @@ class System(models.Model):
     def __str__(self):
         return self.name
 
+    def delete(self, *args, **kwargs):
+        processes = Process.objects.filter(system=self)
+        for process in processes:
+            process.xml.delete()
+        super().delete(*args, **kwargs)
+
 class Process(models.Model):
     name = models.CharField(max_length=100)
     xml = models.FileField(upload_to='processes/xml/',

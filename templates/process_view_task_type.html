@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Asset names</th>
+            <th>Asset types</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for task in task_list %}
+            <tr>
+                <td>
+                    {{ task.name }}
+                </td>
+                <td>
+                    <form method="POST" action="{% url 'task_type_enrichment' task.process.pk %}">
+                        {% csrf_token %}
+                        {% if task.asset_type != None %}
+                            {{ task.asset_type }}
+                        {% else %}
+                            <select name="{{ task.pk }}" class="form-control">
+                                {% for type in asset_type %}
+                                    <option value="{{ type.pk }}">{{ type.name }}</option>
+                                {% endfor %}
+                            </select>
+                        {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <input type="submit" value="Save task type"/>
+    </form>
+{% endblock %}

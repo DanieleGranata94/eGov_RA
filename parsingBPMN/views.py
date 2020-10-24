@@ -1,3 +1,4 @@
+from MySQLdb.constants.FIELD_TYPE import NULL
 from django.core.files.storage import FileSystemStorage
 from django.core.serializers import python
 from django.shortcuts import render, redirect
@@ -40,6 +41,7 @@ def bpmn_process_management(request,pk):
                 for dizionario in tuple:
                     if type(dizionario) is dict:
                         if dizionario['type'].endswith("Task"):
+                            print(dizionario['type'])
                             attribute_value = []
                             if dizionario['type'].startswith("send"):
                                 asset_type = Asset_type.objects.get(name="Send task")
@@ -87,11 +89,13 @@ def bpmn_process_management(request,pk):
                             for a in attribute:
                                 asset_has_attribute = Asset_has_attribute(asset=asset,attribute=a)
                                 asset_has_attribute.save()
-                            #se non hai o l'attribute value o l'asset_type non si salva in asset_has_attribute
-            return redirect('process_view', pk)
+                        elif dizionario['type'].endswith("task"):
+                            asset = Asset(name=dizionario['node_name'], process=Process.objects.get(pk=pk))
+                            asset.save()
+            return redirect('process_view_task_type', pk)
     else:
         form = ProcessForm()
-    processes = Process.objects.all()
+    processes = Process.objects.filter(system=System.objects.get(pk=pk))
     check_box = []
     for process in processes:
         assets = Asset.objects.filter(process=process)
@@ -118,8 +122,43 @@ def delete_process(request,pk):
         process.delete()
     return redirect('bpmn_process_management',system_id)
 
+def process_view_task_type(request,pk):
+    task_list = Asset.objects.filter(process=Process.objects.get(pk=pk))
+    check_attribute = False
+    for task in task_list:
+        if task.asset_type == None:
+            check_attribute = True
+    if check_attribute == True:
+        asset_type = Asset_type.objects.all()
+        return render(request, 'process_view_task_type.html', {
+            'task_list':task_list,'asset_type':asset_type})
+    else:
+        return redirect('process_view_attribute', pk)
 
-def process_view(request,pk):
+def task_type_enrichment(request,pk):
+    if request.method == "POST":
+        assets_for_process = Asset.objects.filter(process=Process.objects.get(pk=pk))
+        task_enrichment = []
+        types = []
+        for asset in assets_for_process:
+            task_enrichment.append(request.POST.get(str(asset.pk)))
+        for type in task_enrichment:
+            if type != None:
+                type = int(type)
+                types.append(Asset_type.objects.get(pk=type))
+            else:
+                types.append(None)
+        for asset,type in zip(assets_for_process,types):
+            if type != None:
+                x = Asset.objects.get(pk=asset.pk)
+                x.asset_type = type
+                x.save()
+        return redirect('process_view_attribute',pk)
+    else:
+        return redirect('task_type_enrichment',pk)
+
+
+def process_view_attribute(request,pk):
     task_list = Asset.objects.filter(process=Process.objects.get(pk=pk))
     check_attribute = False
     for task in task_list:
@@ -146,7 +185,7 @@ def process_view(request,pk):
         script = Attribute.objects.filter(asset_type=Asset_type.objects.get(name="Script task"))
         business = Attribute.objects.filter(asset_type=Asset_type.objects.get(name="Business rule task"))
         task_info = zip(task_list,list_attributes)
-        return render(request,'process_view.html',{
+        return render(request, 'process_view_attribute.html', {
                 'task_info':task_info,'send':send,'receive':receive,'user':user,'manual':manual,'service':service,
                 'script':script,'business':business})
     else:
