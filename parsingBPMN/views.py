@@ -4,7 +4,8 @@ from django.shortcuts import render, redirect
 
 
 from .forms import ProcessForm, SystemForm
-from .models import Process, Asset, System
+from .models import Process, Asset, System, Asset_has_attribute, Attribute, Asset_type, Attribute_value, \
+    Threat_has_attribute
 from .bpmn_python_master.bpmn_python import bpmn_diagram_rep as diagram
 
 # Create your views here.
@@ -35,29 +36,73 @@ def bpmn_process_management(request,pk):
             pk = last_process.pk
             bpmn_graph.load_diagram_from_xml_file(Process.objects.get(pk=pk).xml)
             lista = bpmn_graph.get_nodes()
-            # task_list = []
-            #task_attribute = []
             for tuple in lista:
                 for dizionario in tuple:
                     if type(dizionario) is dict:
                         if dizionario['type'].endswith("Task"):
-                            #list_attributes = []
-                            new_task = Asset(name=dizionario['node_name'], asset_type=dizionario['type'],
-                                            process=Process.objects.get(pk=pk))
-                            new_task.save()
-                            #if not dizionario['attribute']:
-                            #    task_attribute.append("empty")
-                            #else:
-                            #    for e in dizionario['attribute']:
-                            #        list_attributes.append(e)
-                            #    task_attribute.append(list_attributes)
-            # process_info = zip(task_list,task_attribute)
+                            attribute_value = []
+                            if dizionario['type'].startswith("send"):
+                                asset_type = Asset_type.objects.get(name="Send task")
+                                for e in dizionario['attribute']:
+                                    e = e.replace(" ","_")
+                                    e = e.lower()
+                                    if e=="pec_communication" or e=="mail_communication" or e=="post_office_communication":
+                                        attribute_value.append(Attribute_value.objects.get(value=e))
+                            elif dizionario['type'].startswith("receive"):
+                                asset_type = Asset_type.objects.get(name="Receive task")
+                                for e in dizionario['attribute']:
+                                    e = e.replace(" ","_")
+                                    e = e.lower()
+                                    if e=="pec_communication" or e=="mail_communication" or e=="post_office_communication":
+                                        attribute_value.append(Attribute_value.objects.get(value=e))
+                            elif dizionario['type'].startswith("user"):
+                                asset_type = Asset_type.objects.get(name="User task")
+                                for e in dizionario['attribute']:
+                                    e = e.replace(" ","_")
+                                    e = e.lower()
+                                    if e=="online" or e=="offline":
+                                        attribute_value.append(Attribute_value.objects.get(value=e))
+                            elif dizionario['type'].startswith("manual"):
+                                asset_type = Asset_type.objects.get(name="Manual task")
+                                attribute_value.append(Attribute_value.objects.get(value="manual_task"))
+                            elif dizionario['type'].startswith("service"):
+                                asset_type = Asset_type.objects.get(name="Service task")
+                                for e in dizionario['attribute']:
+                                    e = e.replace(" ","_")
+                                    e = e.lower()
+                                    if e=="statefull" or e=="stateless":
+                                        attribute_value.append(Attribute_value.objects.get(value=e))
+                            elif dizionario['type'].startswith("script"):
+                                asset_type = Asset_type.objects.get(name="Script task")
+                                attribute_value.append(Attribute_value.objects.get(value="script_task"))
+                            elif dizionario['type'].startswith("business"):
+                                asset_type = Asset_type.objects.get(name="Business rule task")
+                                attribute_value.append(Attribute_value.objects.get(value="business_rule_task"))
+
+                            asset = Asset(name=dizionario['node_name'], process=Process.objects.get(pk=pk),asset_type=asset_type)
+                            asset.save()
+                            attribute = []
+                            for value in attribute_value:
+                                attribute.append(Attribute.objects.get(asset_type=asset_type,attribute_value=value))
+                            for a in attribute:
+                                asset_has_attribute = Asset_has_attribute(asset=asset,attribute=a)
+                                asset_has_attribute.save()
+                            #se non hai o l'attribute value o l'asset_type non si salva in asset_has_attribute
             return redirect('process_view', pk)
     else:
         form = ProcessForm()
     processes = Process.objects.all()
+    check_box = []
+    for process in processes:
+        assets = Asset.objects.filter(process=process)
+        check_attribute = False
+        for asset in assets:
+            if not Asset_has_attribute.objects.filter(asset=asset):
+                check_attribute = True
+        check_box.append(check_attribute)
+    processes_info = zip(processes,check_box)
     return render(request,'bpmn_process_management.html',{
-        'form':form,'processes':processes
+        'form':form,'processes_info':processes_info
     })
 
 def delete_system(request,pk):
@@ -76,27 +121,71 @@ def delete_process(request,pk):
 
 def process_view(request,pk):
     task_list = Asset.objects.filter(process=Process.objects.get(pk=pk))
+    check_attribute = False
+    for task in task_list:
+        if not Asset_has_attribute.objects.filter(asset=task):
+            check_attribute = True
+    if check_attribute==True:
+        task_attributes = []
+        list_attributes = []
+        for task in task_list:
+            task_attributes.append(Asset_has_attribute.objects.filter(asset=task))
+        for attributes in task_attributes:
+            if not attributes:
+                list_attributes.append("empty")
+            else:
+                sub_list = []
+                for element in attributes:
+                    sub_list.append(element.attribute.attribute_value.value)
+                list_attributes.append(sub_list)
+        send = Attribute.objects.filter(asset_type=Asset_type.objects.get(name="Send task"))
+        receive = Attribute.objects.filter(asset_type=Asset_type.objects.get(name="Receive task"))
+        user = Attribute.objects.filter(asset_type=Asset_type.objects.get(name="User task"))
+        manual = Attribute.objects.filter(asset_type=Asset_type.objects.get(name="Manual task"))
+        service = Attribute.objects.filter(asset_type=Asset_type.objects.get(name="Service task"))
+        script = Attribute.objects.filter(asset_type=Asset_type.objects.get(name="Script task"))
+        business = Attribute.objects.filter(asset_type=Asset_type.objects.get(name="Business rule task"))
+        task_info = zip(task_list,list_attributes)
+        return render(request,'process_view.html',{
+                'task_info':task_info,'send':send,'receive':receive,'user':user,'manual':manual,'service':service,
+                'script':script,'business':business})
+    else:
+        return redirect('threat_modeling',pk)
 
-    bpmn_graph = diagram.BpmnDiagramGraph()
-    bpmn_graph.load_diagram_from_xml_file(Process.objects.get(pk=pk).xml)
-    lista = bpmn_graph.get_nodes()
-    task_attribute = []
-    for tuple in lista:
-        for dizionario in tuple:
-            if type(dizionario) is dict:
-                if dizionario['type'].endswith("Task"):
-                    list_attributes = []
-                    if not dizionario['attribute']:
-                        task_attribute.append("empty")
-                    else:
-                        for e in dizionario['attribute']:
-                            list_attributes.append(e)
-                        task_attribute.append(list_attributes)
+def process_enrichment(request,pk):
+    if request.method == "POST":
+        assets_for_process = Asset.objects.filter(process=Process.objects.get(pk=pk))
+        attributes_enrichment = []
+        attributes = []
+        for asset in assets_for_process:
+            attributes_enrichment.append(request.POST.get(str(asset.pk)))
+        for attribute_enrichment in attributes_enrichment:
+            if attribute_enrichment != None:
+                attribute_enrichment = int(attribute_enrichment)
+                attributes.append(Attribute.objects.get(pk=attribute_enrichment))
+            else:
+                attributes.append(None)
 
-    task_info = zip(task_list,task_attribute)
-    return render(request,'process_view.html',{
-        'task_info':task_info
+        for asset,attribute in zip(assets_for_process,attributes):
+            if attribute != None:
+                asset_has_attribute = Asset_has_attribute(asset=asset,attribute=attribute)
+                asset_has_attribute.save()
+
+        return redirect('threat_modeling',pk)
+    else:
+        return redirect('process_enrichment',pk)
+
+def threat_modeling(request,pk):
+    assets = Asset.objects.filter(process=Process.objects.get(pk=pk))
+    attributes = []
+    threats = []
+    for asset in assets:
+        attributes.append(Asset_has_attribute.objects.filter(asset=asset))
+    for list_attribute in attributes:
+        for attribute in list_attribute:
+            attribute = attribute.attribute
+            threats.append(Threat_has_attribute.objects.filter(attribute=attribute))
+    threat_model_info = zip(assets,attributes,threats)
+    return render(request, 'threat_modeling.html',{
+        'threat_model_info':threat_model_info
     })
-
-def task_enrichment(request,task_id):
-    return render(request,'task_enrichment.html')

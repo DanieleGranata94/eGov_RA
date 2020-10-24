@@ -30,18 +30,6 @@ class Process(models.Model):
         self.xml.delete()
         super().delete(*args, **kwargs)
 
-class Asset(models.Model):
-    name = models.CharField(max_length=100)
-    asset_type = models.CharField(max_length=100)
-    process = models.ForeignKey(Process, on_delete=models.CASCADE)
-
-    class Meta:
-        verbose_name="Asset"
-        verbose_name_plural="Assets"
-
-    def __str__(self):
-        return self.name
-
 class Asset_type(models.Model):
     name = models.CharField(max_length=100)
     description = models.CharField(max_length=500)
@@ -52,3 +40,58 @@ class Asset_type(models.Model):
 
     def __str__(self):
         return self.name
+
+class Asset(models.Model):
+    name = models.CharField(max_length=100)
+    process = models.ForeignKey(Process, on_delete=models.CASCADE)
+    asset_type = models.ForeignKey(Asset_type,on_delete=models.CASCADE,null=True)
+
+    class Meta:
+        verbose_name="Asset"
+        verbose_name_plural="Assets"
+
+    def __str__(self):
+        return self.name
+
+class Attribute_value(models.Model):
+    value = models.CharField(max_length=100)
+
+    class Meta:
+        verbose_name="Attribute_value"
+        verbose_name_plural="Attributes_values"
+
+    def __str__(self):
+        return self.value
+
+class Threat(models.Model):
+    name = models.CharField(max_length=100)
+    description = models.CharField(max_length=500)
+
+    class Meta:
+        verbose_name="Threat"
+        verbose_name_plural="Threats"
+
+    def __str__(self):
+        return self.name
+
+class Attribute(models.Model):
+    attribute_name = models.CharField(max_length=100)
+    asset_type = models.ForeignKey(Asset_type,on_delete=models.CASCADE)
+    attribute_value = models.ForeignKey(Attribute_value,on_delete=models.CASCADE)
+
+    class Meta:
+        verbose_name="Attribute"
+        verbose_name_plural="Attributes"
+
+    def __str__(self):
+        return self.attribute_name
+
+class Asset_has_attribute(models.Model):
+    asset = models.ForeignKey(Asset,on_delete=models.CASCADE)
+    attribute = models.ForeignKey(Attribute,on_delete=models.CASCADE)
+
+class Threat_has_attribute(models.Model):
+    threat = models.ForeignKey(Threat,on_delete=models.CASCADE)
+    attribute = models.ForeignKey(Attribute,on_delete=models.CASCADE)
+
+# AL MODELLO DEI DATI MANCA SOLO LA PARTE RELATIVA AI THREAT AGENTS

@@ -18,8 +18,8 @@ from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static
 
-from parsingBPMN.views import process_view, task_enrichment, bpmn_process_management, system_management, \
-    delete_process, delete_system
+from parsingBPMN.views import process_view, bpmn_process_management, system_management, \
+    delete_process, delete_system, process_enrichment, threat_modeling
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -28,7 +28,8 @@ urlpatterns = [
     path('process_view/<int:pk>', process_view, name='process_view'),
     path('delete_process/<int:pk>', delete_process, name='delete_process'),
     path('delete_system/<int:pk>', delete_system, name='delete_system'),
-    path('task_enrichment/<int:task_id>', task_enrichment, name='task_enrichment'),
+    path('process_enrichment/<int:pk>', process_enrichment, name='process_enrichment'),
+    path('threat_modeling/<int:pk>', threat_modeling, name='threat_modeling'),
 ]
 
 if settings.DEBUG:

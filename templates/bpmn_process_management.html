@@ -13,30 +13,37 @@
         <thead>
             <tr>
                 <th>Name</th>
-                <th>Download file</th>
-                <th>Select file</th>
-                <th>Delete file</th>
+                <th style="text-align: center">BPMN enrichment</th>
+                <th style="text-align: center">Download</th>
+                <th style="text-align: center">Select</th>
+                <th style="text-align: center">Delete</th>
             </tr>
         </thead>
         <tbody>
-            {% for process in processes %}
+            {% for process in processes_info %}
                 <tr>
-                    <td> {{ process.name }}</td>
-                    <td>
-                        <a href="{{ process.xml.url }}" class="btn btn-primary btn-sm">
+                    <td style="font-family: 'Times New Roman';font-size: larger"> {{ process.0.name }}</td>
+                    {% if process.1 == False %}
+                        <td style="text-align: center;font-size: 200%">✅ </td>
+                    {% else %}
+                        <td style="text-align: center;font-size: 200%">❌</td>
+                    {% endif %}
+
+                    <td style="text-align: center">
+                        <a href="{{ process.0.xml.url }}" class="btn btn-primary btn-sm">
                             Download file
                         </a>
                     </td>
-                    <td>
-                        <form method="POST" action="{% url 'process_view' process.pk %}">
+                    <td style="text-align: center">
+                        <form method="POST" action="{% url 'process_view' process.0.pk %}">
                             {% csrf_token %}
-                            <button type="submit" class="btn btn-primary btn-sm">Select file</button>
+                            <button type="submit" class="btn btn-primary btn-sm">Select process</button>
                         </form>
                     </td>
-                    <td>
-                        <form method="POST" action="{% url 'delete_process' process.pk %}">
+                    <td style="text-align: center">
+                        <form method="POST" action="{% url 'delete_process' process.0.pk %}">
                             {% csrf_token %}
-                            <button type="submit" class="btn btn-danger btn-sm">Delete file</button>
+                            <button type="submit" class="btn btn-danger btn-sm">Delete process</button>
                         </form>
                     </td>
                 </tr>

@@ -79,6 +79,11 @@ class Consts(object):
     end_event = "endEvent"
     intermediate_throw_event = "intermediateThrowEvent"
     boundary_event = "boundaryEvent"
+    #Aggiungo task type per eGov
+    send_task = "sendTask"
+    receive_task = "receiveTask"
+    script_task = "scriptTask"
+    business_rule_task = "businessRuleTask"
 
     # BPMN 2.0 diagram interchange element names
     bpmn_shape = "BPMNShape"

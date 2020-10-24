@@ -179,7 +179,11 @@ class BpmnDiagramGraphImport(object):
         if tag_name == consts.Consts.task \
                 or tag_name == consts.Consts.user_task \
                 or tag_name == consts.Consts.service_task \
-                or tag_name == consts.Consts.manual_task:
+                or tag_name == consts.Consts.manual_task \
+                or tag_name == consts.Consts.send_task \
+                or tag_name == consts.Consts.receive_task \
+                or tag_name == consts.Consts.script_task \
+                or tag_name == consts.Consts.business_rule_task:
             BpmnDiagramGraphImport.import_task_to_graph(diagram_graph, process_id, process_attributes, element)
         elif tag_name == consts.Consts.subprocess:
             BpmnDiagramGraphImport.import_subprocess_to_graph(diagram_graph, sequence_flows, process_id,
