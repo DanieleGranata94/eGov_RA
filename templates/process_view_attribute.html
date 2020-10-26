@@ -1,6 +1,11 @@
 {% extends 'base.html' %}
 
 {% block content %}
+    <h1>Attributes enrichment</h1>
+    <p style="font-family: 'Times New Roman';font-size: medium">
+        It is necessary to report the information about attribute of each asset,
+        where this has not been explicitly indicated in the bpmn associated with the process in question.
+    </p>
     <table class="table">
         <thead>
         <tr>
@@ -12,14 +17,14 @@
         <tbody>
         {% for task in task_info %}
             <tr>
-                <td>
+                <td style="font-family: 'Times New Roman';font-size: larger">
                     {{ task.0.name }}
                 </td>
-                <td> {{ task.0.asset_type }} </td>
+                <td style="font-family: 'Times New Roman';font-size: larger"> {{ task.0.asset_type }} </td>
                 {% if task.1 != 'empty' %}
-                    <td> {{ task.1 }} </td>
+                    <td style="font-family: 'Times New Roman';font-size: larger"> {{ task.1 }} </td>
                 {% elif task.0.asset_type.name == "Send task" %}
-                    <td>
+                    <td style="font-family: 'Times New Roman';font-size: larger">
                     <form method="POST" action="{% url 'process_enrichment' task.0.process.pk %}">
                         {% csrf_token %}
                         <select name="{{ task.0.pk }}" class="form-control">
@@ -29,7 +34,7 @@
                         </select>
                     </td>
                 {% elif task.0.asset_type.name == "Receive task" %}
-                    <td>
+                    <td style="font-family: 'Times New Roman';font-size: larger">
                     <form method="POST" action="{% url 'process_enrichment' task.0.process.pk %}">
                         {% csrf_token %}
                         <select name="{{ task.0.pk }}" class="form-control">
@@ -39,7 +44,7 @@
                         </select>
                     </td>
                 {% elif task.0.asset_type.name == "User task" %}
-                    <td>
+                    <td style="font-family: 'Times New Roman';font-size: larger">
                     <form method="POST" action="{% url 'process_enrichment' task.0.process.pk %}">
                         {% csrf_token %}
                         <select name="{{ task.0.pk }}" class="form-control">
@@ -49,7 +54,7 @@
                         </select>
                     </td>
                 {% elif task.0.asset_type.name == "Manual task" %}
-                    <td>
+                    <td style="font-family: 'Times New Roman';font-size: larger">
                     <form method="POST" action="{% url 'process_enrichment' task.0.process.pk %}">
                         {% csrf_token %}
                         <select name="{{ task.0.pk }}" class="form-control">
@@ -57,9 +62,9 @@
                                 <option value="{{ value.pk }}">{{ value.attribute_value }}</option>
                             {% endfor %}
                         </select>
-                    </td>
+                    </td style="font-family: 'Times New Roman';font-size: larger">
                 {% elif task.0.asset_type.name == "Service task" %}
-                    <td>
+                    <td style="font-family: 'Times New Roman';font-size: larger">
                     <form method="POST" action="{% url 'process_enrichment' task.0.process.pk %}">
                         {% csrf_token %}
                         <select name="{{ task.0.pk }}" class="form-control">
@@ -69,7 +74,7 @@
                         </select>
                     </td>
                 {% elif task.0.asset_type.name == "Script task" %}
-                    <td>
+                    <td style="font-family: 'Times New Roman';font-size: larger">
                     <form method="POST" action="{% url 'process_enrichment' task.0.process.pk %}">
                         {% csrf_token %}
                         <select name="{{ task.0.pk }}" class="form-control">
@@ -79,7 +84,7 @@
                         </select>
                     </td>
                 {% elif task.0.asset_type.name == "Business rule task" %}
-                    <td>
+                    <td style="font-family: 'Times New Roman';font-size: larger">
                     <form method="POST" action="{% url 'process_enrichment' task.0.process.pk %}">
                         {% csrf_token %}
                         <select name="{{ task.0.pk }}" class="form-control">

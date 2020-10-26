@@ -2,13 +2,25 @@
 
 {% block content %}
     <h1>Upload BPMN process</h1>
-      <form method="POST" enctype="multipart/form-data">
+    <p style="font-family: 'Times New Roman';font-size: medium">
+        This form allows you to create a new process for the selected system,
+        in case the process to be analyzed is not already present in the list below.
+    </p>
+      <form method="POST" enctype="multipart/form-data" style="font-family: 'Times New Roman';font-size: large">
         {% csrf_token %}
           {{ form.as_p }}
         <button type="submit" class="btn btn-primary">Upload file</button>
       </form>
 
     <h1>Uploaded BPMN processes</h1>
+    <p style="font-family: 'Times New Roman';font-size: medium">
+        You can select the process from those already created to continue with the analysis.
+        It is also possible to delete one of the existing process.
+    </p>
+    <p style="font-family: 'Times New Roman';font-size: medium">
+        N.B.: If the process has not yet undergone the enrichment phase (where necessary),
+        this will be marked with a red cross. Otherwise with a green tick.
+    </p>
     <table class="table">
         <thead>
             <tr>

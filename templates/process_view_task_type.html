@@ -1,6 +1,11 @@
 {% extends 'base.html' %}
 
 {% block content %}
+    <h1>Asset type enrichment</h1>
+    <p style="font-family: 'Times New Roman';font-size: medium">
+        It is necessary to report the information associated with the type of asset,
+        where this has not been explicitly indicated in the bpmn associated with the process in question.
+    </p>
     <table class="table">
         <thead>
         <tr>
@@ -11,10 +16,10 @@
         <tbody>
         {% for task in task_list %}
             <tr>
-                <td>
+                <td style="font-family: 'Times New Roman';font-size: larger">
                     {{ task.name }}
                 </td>
-                <td>
+                <td style="font-family: 'Times New Roman';font-size: larger">
                     <form method="POST" action="{% url 'task_type_enrichment' task.process.pk %}">
                         {% csrf_token %}
                         {% if task.asset_type != None %}
