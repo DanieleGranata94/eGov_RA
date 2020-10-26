@@ -41,45 +41,57 @@ def bpmn_process_management(request,pk):
                 for dizionario in tuple:
                     if type(dizionario) is dict:
                         if dizionario['type'].endswith("Task"):
-                            print(dizionario['type'])
                             attribute_value = []
                             if dizionario['type'].startswith("send"):
                                 asset_type = Asset_type.objects.get(name="Send task")
                                 for e in dizionario['attribute']:
                                     e = e.replace(" ","_")
                                     e = e.lower()
-                                    if e=="pec_communication" or e=="mail_communication" or e=="post_office_communication":
-                                        attribute_value.append(Attribute_value.objects.get(value=e))
+                                    if e=="pec_communication":
+                                        attribute_value.append(Attribute_value.objects.get(value="PEC communication"))
+                                    elif e=="mail_communication":
+                                        attribute_value.append(Attribute_value.objects.get(value="Mail communication"))
+                                    elif e=="post_office_communication":
+                                        attribute_value.append(Attribute_value.objects.get(value="Post office communication"))
                             elif dizionario['type'].startswith("receive"):
                                 asset_type = Asset_type.objects.get(name="Receive task")
                                 for e in dizionario['attribute']:
                                     e = e.replace(" ","_")
                                     e = e.lower()
-                                    if e=="pec_communication" or e=="mail_communication" or e=="post_office_communication":
-                                        attribute_value.append(Attribute_value.objects.get(value=e))
+                                    if e == "pec_communication":
+                                        attribute_value.append(Attribute_value.objects.get(value="PEC communication"))
+                                    elif e == "mail_communication":
+                                        attribute_value.append(Attribute_value.objects.get(value="Mail communication"))
+                                    elif e == "post_office_communication":
+                                        attribute_value.append(
+                                            Attribute_value.objects.get(value="Post office communication"))
                             elif dizionario['type'].startswith("user"):
                                 asset_type = Asset_type.objects.get(name="User task")
                                 for e in dizionario['attribute']:
                                     e = e.replace(" ","_")
                                     e = e.lower()
-                                    if e=="online" or e=="offline":
-                                        attribute_value.append(Attribute_value.objects.get(value=e))
+                                    if e=="online":
+                                        attribute_value.append(Attribute_value.objects.get(value="Online"))
+                                    elif e=="offline":
+                                        attribute_value.append(Attribute_value.objects.get(value="Offline"))
                             elif dizionario['type'].startswith("manual"):
                                 asset_type = Asset_type.objects.get(name="Manual task")
-                                attribute_value.append(Attribute_value.objects.get(value="manual_task"))
+                                attribute_value.append(Attribute_value.objects.get(value="Manual task"))
                             elif dizionario['type'].startswith("service"):
                                 asset_type = Asset_type.objects.get(name="Service task")
                                 for e in dizionario['attribute']:
                                     e = e.replace(" ","_")
                                     e = e.lower()
-                                    if e=="statefull" or e=="stateless":
-                                        attribute_value.append(Attribute_value.objects.get(value=e))
+                                    if e=="statefull":
+                                        attribute_value.append(Attribute_value.objects.get(value="Statefull"))
+                                    elif e=="stateless":
+                                        attribute_value.append(Attribute_value.objects.get(value="Stateless"))
                             elif dizionario['type'].startswith("script"):
                                 asset_type = Asset_type.objects.get(name="Script task")
-                                attribute_value.append(Attribute_value.objects.get(value="script_task"))
+                                attribute_value.append(Attribute_value.objects.get(value="Script task"))
                             elif dizionario['type'].startswith("business"):
                                 asset_type = Asset_type.objects.get(name="Business rule task")
-                                attribute_value.append(Attribute_value.objects.get(value="business_rule_task"))
+                                attribute_value.append(Attribute_value.objects.get(value="Business rule task"))
 
                             asset = Asset(name=dizionario['node_name'], process=Process.objects.get(pk=pk),asset_type=asset_type)
                             asset.save()

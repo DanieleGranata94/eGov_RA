@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Creato il: Ott 26, 2020 alle 10:41
+-- Creato il: Ott 26, 2020 alle 16:04
 -- Versione del server: 10.4.11-MariaDB
 -- Versione PHP: 7.2.30
 
@@ -371,16 +371,16 @@ CREATE TABLE `parsingbpmn_attribute_value` (
 --
 
 INSERT INTO `parsingbpmn_attribute_value` (`id`, `value`) VALUES
-(1, 'pec_communication'),
-(2, 'mail_communication'),
-(3, 'post_office_communication'),
-(4, 'online'),
-(5, 'offline'),
-(6, 'manual_task'),
-(7, 'statefull'),
-(8, 'stateless'),
-(9, 'script_task'),
-(10, 'business_rule_task');
+(1, 'PEC communication'),
+(2, 'Mail communication'),
+(3, 'Post office communication'),
+(4, 'Online'),
+(5, 'Offline'),
+(6, 'Manual task'),
+(7, 'Statefull'),
+(8, 'Stateless'),
+(9, 'Script task'),
+(10, 'Business rule task');
 
 -- --------------------------------------------------------
 

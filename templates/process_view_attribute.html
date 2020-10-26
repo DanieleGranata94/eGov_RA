@@ -22,7 +22,13 @@
                 </td>
                 <td style="font-family: 'Times New Roman';font-size: larger"> {{ task.0.asset_type }} </td>
                 {% if task.1 != 'empty' %}
-                    <td style="font-family: 'Times New Roman';font-size: larger"> {{ task.1 }} </td>
+                    <td style="font-family: 'Times New Roman';font-size: larger">
+                        <ul>
+                            {% for attribute in task.1 %}
+                                <li>{{ attribute }}</li>
+                            {% endfor %}
+                        </ul>
+                    </td>
                 {% elif task.0.asset_type.name == "Send task" %}
                     <td style="font-family: 'Times New Roman';font-size: larger">
                     <form method="POST" action="{% url 'process_enrichment' task.0.process.pk %}">
