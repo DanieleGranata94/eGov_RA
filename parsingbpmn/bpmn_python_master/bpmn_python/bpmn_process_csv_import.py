@@ -11,8 +11,8 @@ import pandas as pd
 import re
 import six
 
-import parsingBPMN.bpmn_python_master.bpmn_python.bpmn_python_consts as consts
-import parsingBPMN.bpmn_python_master.bpmn_python.bpmn_diagram_exception as bpmn_exception
+import parsingbpmn.bpmn_python_master.bpmn_python.bpmn_python_consts as consts
+import parsingbpmn.bpmn_python_master.bpmn_python.bpmn_diagram_exception as bpmn_exception
 
 regex_pa_trailing_number = r'^(.*[a-z|A-Z]|[^0-9]?)([0-9]+)$'
 regex_pa_trailing_letter = r'(.+)([a-z|A-Z])'

@@ -3,7 +3,7 @@
 Class including utility method used in diagram importing
 """
 
-import parsingBPMN.bpmn_python_master.bpmn_python.bpmn_python_consts as consts
+import parsingbpmn.bpmn_python_master.bpmn_python.bpmn_python_consts as consts
 
 
 class BpmnImportUtils(object):

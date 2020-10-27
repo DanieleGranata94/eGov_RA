@@ -10,9 +10,9 @@ import errno
 import os
 import string
 
-import parsingBPMN.bpmn_python_master.bpmn_python.bpmn_python_consts as consts
-import parsingBPMN.bpmn_python_master.bpmn_python.bpmn_diagram_exception as bpmn_exception
-import parsingBPMN.bpmn_python_master.bpmn_python.bpmn_import_utils as utils
+import parsingbpmn.bpmn_python_master.bpmn_python.bpmn_python_consts as consts
+import parsingbpmn.bpmn_python_master.bpmn_python.bpmn_diagram_exception as bpmn_exception
+import parsingbpmn.bpmn_python_master.bpmn_python.bpmn_import_utils as utils
 
 
 class BpmnDiagramGraphCsvExport(object):

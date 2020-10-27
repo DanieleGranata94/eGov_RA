@@ -6,12 +6,12 @@ import uuid
 
 import networkx as nx
 
-import parsingBPMN.bpmn_python_master.bpmn_python.bpmn_diagram_exception as bpmn_exception
-import parsingBPMN.bpmn_python_master.bpmn_python.bpmn_diagram_export as bpmn_export
-import parsingBPMN.bpmn_python_master.bpmn_python.bpmn_diagram_import as bpmn_import
-import parsingBPMN.bpmn_python_master.bpmn_python.bpmn_process_csv_export as bpmn_csv_export
-import parsingBPMN.bpmn_python_master.bpmn_python.bpmn_process_csv_import as bpmn_csv_import
-import parsingBPMN.bpmn_python_master.bpmn_python.bpmn_python_consts as consts
+import parsingbpmn.bpmn_python_master.bpmn_python.bpmn_diagram_exception as bpmn_exception
+import parsingbpmn.bpmn_python_master.bpmn_python.bpmn_diagram_export as bpmn_export
+import parsingbpmn.bpmn_python_master.bpmn_python.bpmn_diagram_import as bpmn_import
+import parsingbpmn.bpmn_python_master.bpmn_python.bpmn_process_csv_export as bpmn_csv_export
+import parsingbpmn.bpmn_python_master.bpmn_python.bpmn_process_csv_import as bpmn_csv_import
+import parsingbpmn.bpmn_python_master.bpmn_python.bpmn_python_consts as consts
 
 
 class BpmnDiagramGraph(object):

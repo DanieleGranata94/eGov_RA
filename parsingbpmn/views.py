@@ -1,6 +1,9 @@
+import csv
+
 from MySQLdb.constants.FIELD_TYPE import NULL
 from django.core.files.storage import FileSystemStorage
 from django.core.serializers import python
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
 
 
@@ -238,5 +241,46 @@ def threat_modeling(request,pk):
             threats.append(Threat_has_attribute.objects.filter(attribute=attribute))
     threat_model_info = zip(assets,attributes,threats)
     return render(request, 'threat_modeling.html',{
-        'threat_model_info':threat_model_info
+        'threat_model_info':threat_model_info,'pk':pk
     })
+
+def export_threat_modeling(request,pk):
+    if request.method == "POST":
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename="report.csv"'
+
+        assets = Asset.objects.filter(process=Process.objects.get(pk=pk))
+        attributes = []
+        threats = []
+        for asset in assets:
+            attributes.append(Asset_has_attribute.objects.filter(asset=asset))
+        for list_attribute in attributes:
+            for attribute in list_attribute:
+                attribute = attribute.attribute
+                threats.append(Threat_has_attribute.objects.filter(attribute=attribute))
+
+        writer = csv.writer(response)
+        writer.writerow(['Asset name', 'Asset type', 'Asset attributes', 'Threats'])
+
+        attributes_list = []
+        for attribute in attributes:
+            attr_sublist = []
+            for element in attribute:
+                attr_sublist.append(element.attribute.attribute_value.value)
+            attributes_list.append(attr_sublist)
+
+        threats_list = []
+        for threat in threats:
+            threat_sublist = []
+            for element in threat:
+                threat_sublist.append(element.threat.name)
+            threats_list.append(threat_sublist)
+
+        print(assets)
+        print(attributes_list)
+        print(threats_list)
+
+        for asset,attribute,threat in zip(assets,attributes_list,threats_list):
+            writer.writerow([asset.name, asset.asset_type, attribute, threat])
+
+    return response
