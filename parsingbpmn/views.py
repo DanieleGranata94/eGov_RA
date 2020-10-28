@@ -253,8 +253,9 @@ def export_threat_modeling(request,pk):
         response = HttpResponse(
             content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
         )
-        response['Content-Disposition'] = 'attachment; filename={date}-report.xlsx'.format(
+        response['Content-Disposition'] = 'attachment; filename={date}-{name}-report.xlsx'.format(
             date=datetime.now().strftime('%Y-%m-%d'),
+            name=Process.objects.get(pk=pk).name.replace(" ","_")
         )
         workbook = Workbook()
 
