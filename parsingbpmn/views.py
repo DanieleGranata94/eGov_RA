@@ -1,11 +1,13 @@
 import csv
+from datetime import datetime
 
 from MySQLdb.constants.FIELD_TYPE import NULL
 from django.core.files.storage import FileSystemStorage
 from django.core.serializers import python
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
-
+from openpyxl import Workbook
+from openpyxl.styles import Font, Border, Side
 
 from .forms import ProcessForm, SystemForm
 from .models import Process, Asset, System, Asset_has_attribute, Attribute, Asset_type, Attribute_value, \
@@ -246,8 +248,30 @@ def threat_modeling(request,pk):
 
 def export_threat_modeling(request,pk):
     if request.method == "POST":
-        response = HttpResponse(content_type='text/csv')
-        response['Content-Disposition'] = 'attachment; filename="report.csv"'
+
+        response = HttpResponse(
+            content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        )
+        response['Content-Disposition'] = 'attachment; filename={date}-report.xlsx'.format(
+            date=datetime.now().strftime('%Y-%m-%d'),
+        )
+        workbook = Workbook()
+
+        # Get active worksheet/tab
+        worksheet = workbook.active
+        worksheet.title = 'Threat_modeling_REPORT'
+        columns = ['Asset name', 'Asset type', 'Asset attributes', 'Threats']
+        row_num = 1
+
+        # Assign the titles for each cell of the header
+        for col_num, column_title in enumerate(columns, 1):
+            cell = worksheet.cell(row=row_num, column=col_num)
+            cell.value = column_title
+            cell.font = Font(name="Times New Roman",size=12,bold=True,color='FF0000')
+            cell.border = Border(left=Side(border_style="thin",color='FF000000'),
+                                 right=Side(border_style="thin",color='FF000000'),
+                                 top=Side(border_style="thin",color='FF000000'),
+                                 bottom=Side(border_style="thin",color='FF000000'),)
 
         assets = Asset.objects.filter(process=Process.objects.get(pk=pk))
         attributes = []
@@ -258,9 +282,6 @@ def export_threat_modeling(request,pk):
             for attribute in list_attribute:
                 attribute = attribute.attribute
                 threats.append(Threat_has_attribute.objects.filter(attribute=attribute))
-
-        writer = csv.writer(response)
-        writer.writerow(['Asset name', 'Asset type', 'Asset attributes', 'Threats'])
 
         attributes_list = []
         for attribute in attributes:
@@ -276,11 +297,84 @@ def export_threat_modeling(request,pk):
                 threat_sublist.append(element.threat.name)
             threats_list.append(threat_sublist)
 
-        print(assets)
-        print(attributes_list)
-        print(threats_list)
-
         for asset,attribute,threat in zip(assets,attributes_list,threats_list):
-            writer.writerow([asset.name, asset.asset_type, attribute, threat])
+            row_num += 1
 
-    return response
+            if not threat:
+                threat0 = ''
+            else:
+                threat0 = str(threat[0])
+
+            # Define the data for each cell in the row
+            row = [
+                asset.name,
+                asset.asset_type.name,
+                str(attribute[0]),
+                threat0
+            ]
+
+            # Assign the data for each cell of the row
+            for col_num, cell_value in enumerate(row, 1):
+                cell = worksheet.cell(row=row_num, column=col_num)
+                cell.value = cell_value
+                cell.font = Font(name="Times New Roman", size=11, bold=False, color='FF000000')
+                cell.border = Border(left=Side(border_style="thin", color='FF000000'),
+                                     right=Side(border_style="thin", color='FF000000'),
+                                     top=Side(border_style="thin", color='FF000000'),
+                                     bottom=Side(border_style="thin", color='FF000000'), )
+
+            count_attr = 0
+            old_row = row_num
+            while count_attr < len(attribute)-1:
+                count_attr += 1
+                row_num += 1
+
+                row = [
+                    '',
+                    '',
+                    str(attribute[count_attr]),
+                    ''
+                ]
+
+                for col_num, cell_value in enumerate(row, 1):
+                    cell = worksheet.cell(row=row_num, column=col_num)
+                    cell.value = cell_value
+                    cell.font = Font(name="Times New Roman", size=11, bold=False, color='FF000000')
+                    cell.border = Border(left=Side(border_style="thin", color='FF000000'),
+                                         right=Side(border_style="thin", color='FF000000'),
+                                         top=Side(border_style="thin", color='FF000000'),
+                                         bottom=Side(border_style="thin", color='FF000000'), )
+
+            count_threats = 0
+            row_num = old_row
+            while count_threats < len(threat)-1:
+                count_threats += 1
+                row_num += 1
+
+                row = [
+                    '',
+                    '',
+                    '',
+                    str(threat[count_threats])
+                ]
+
+                for col_num, cell_value in enumerate(row, 1):
+                    cell = worksheet.cell(row=row_num, column=col_num)
+                    cell.value = cell_value
+                    cell.font = Font(name="Times New Roman", size=11, bold=False, color='FF000000')
+                    cell.border = Border(left=Side(border_style="thin", color='FF000000'),
+                                         right=Side(border_style="thin", color='FF000000'),
+                                         top=Side(border_style="thin", color='FF000000'),
+                                         bottom=Side(border_style="thin", color='FF000000'), )
+        #Per effettuare il resize delle celle in base a quella più grande
+        dims = {}
+        for row in worksheet.rows:
+            for cell in row:
+                if cell.value:
+                    dims[cell.column_letter] = max((dims.get(cell.column_letter, 0), len(str(cell.value))))
+        for col, value in dims.items():
+            worksheet.column_dimensions[col].width = value
+
+        workbook.save(response)
+
+        return response
