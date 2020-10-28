@@ -249,6 +249,7 @@ def threat_modeling(request,pk):
 def export_threat_modeling(request,pk):
     if request.method == "POST":
 
+        #help: https://djangotricks.blogspot.com/2019/02/how-to-export-data-to-xlsx-files.html
         response = HttpResponse(
             content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
         )
