@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Creato il: Ott 27, 2020 alle 18:53
+-- Creato il: Ott 31, 2020 alle 10:37
 -- Versione del server: 10.4.11-MariaDB
 -- Versione PHP: 7.2.30
 
@@ -121,7 +121,15 @@ INSERT INTO `auth_permission` (`id`, `name`, `content_type_id`, `codename`) VALU
 (57, 'Can add asset_has_attribute', 15, 'add_asset_has_attribute'),
 (58, 'Can change asset_has_attribute', 15, 'change_asset_has_attribute'),
 (59, 'Can delete asset_has_attribute', 15, 'delete_asset_has_attribute'),
-(60, 'Can view asset_has_attribute', 15, 'view_asset_has_attribute');
+(60, 'Can view asset_has_attribute', 15, 'view_asset_has_attribute'),
+(61, 'Can add Control', 16, 'add_control'),
+(62, 'Can change Control', 16, 'change_control'),
+(63, 'Can delete Control', 16, 'delete_control'),
+(64, 'Can view Control', 16, 'view_control'),
+(65, 'Can add threat_has_control', 17, 'add_threat_has_control'),
+(66, 'Can change threat_has_control', 17, 'change_threat_has_control'),
+(67, 'Can delete threat_has_control', 17, 'delete_threat_has_control'),
+(68, 'Can view threat_has_control', 17, 'view_threat_has_control');
 
 -- --------------------------------------------------------
 
@@ -211,10 +219,12 @@ INSERT INTO `django_content_type` (`id`, `app_label`, `model`) VALUES
 (7, 'parsingBPMN', 'asset_type'),
 (13, 'parsingBPMN', 'attribute'),
 (11, 'parsingBPMN', 'attribute_value'),
+(16, 'parsingbpmn', 'control'),
 (10, 'parsingBPMN', 'process'),
 (8, 'parsingBPMN', 'system'),
 (12, 'parsingBPMN', 'threat'),
 (14, 'parsingBPMN', 'threat_has_attribute'),
+(17, 'parsingbpmn', 'threat_has_control'),
 (6, 'sessions', 'session');
 
 -- --------------------------------------------------------
@@ -259,7 +269,16 @@ INSERT INTO `django_migrations` (`id`, `app`, `name`, `applied`) VALUES
 (22, 'parsingBPMN', '0004_auto_20201021_1730', '2020-10-21 15:30:38.466402'),
 (23, 'parsingBPMN', '0005_auto_20201021_1806', '2020-10-21 16:06:28.968480'),
 (24, 'parsingBPMN', '0006_auto_20201021_1922', '2020-10-21 17:22:53.146964'),
-(25, 'parsingBPMN', '0007_asset_asset_type', '2020-10-22 14:25:58.692734');
+(25, 'parsingBPMN', '0007_asset_asset_type', '2020-10-22 14:25:58.692734'),
+(26, 'parsingbpmn', '0001_initial', '2020-10-30 14:54:02.556697'),
+(27, 'parsingbpmn', '0002_attribute_value_threat', '2020-10-30 14:54:02.561685'),
+(28, 'parsingbpmn', '0003_auto_20201021_1639', '2020-10-30 14:54:02.566366'),
+(29, 'parsingbpmn', '0004_auto_20201021_1730', '2020-10-30 14:54:02.570418'),
+(30, 'parsingbpmn', '0005_auto_20201021_1806', '2020-10-30 14:54:02.574713'),
+(31, 'parsingbpmn', '0006_auto_20201021_1922', '2020-10-30 14:54:02.582431'),
+(32, 'parsingbpmn', '0007_asset_asset_type', '2020-10-30 14:54:02.586286'),
+(33, 'parsingbpmn', '0008_control_threat_has_control', '2020-10-30 14:54:02.591437'),
+(34, 'parsingbpmn', '0010_threat_has_control', '2020-10-30 15:16:27.952019');
 
 -- --------------------------------------------------------
 
@@ -381,6 +400,44 @@ INSERT INTO `parsingbpmn_attribute_value` (`id`, `value`) VALUES
 (8, 'Stateless'),
 (9, 'Script task'),
 (10, 'Business rule task');
+
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `parsingbpmn_control`
+--
+
+CREATE TABLE `parsingbpmn_control` (
+  `id` int(11) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `description` varchar(500) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dump dei dati per la tabella `parsingbpmn_control`
+--
+
+INSERT INTO `parsingbpmn_control` (`id`, `name`, `description`) VALUES
+(1, 'Inventory and Control of Hardware Assets', 'Actively manage (inventory, track, and correct) all hardware devices on the network so that only authorized devices are given access, and unauthorized and unmanaged devices are found and prevented from gaining access.'),
+(2, 'Inventory and Control of Software Assets', 'Actively manage (inventory, track, and correct) all software on the network so that only authorized software is installed and can execute, and that unauthorized and unmanaged software is found and prevented from installation or execution. '),
+(3, 'Continuous Vulnerability Management', 'Continuously acquire, assess, and take action on new information in order to identify vulnerabilities, remediate, and minimize the window of opportunity for attackers.'),
+(4, 'Controlled Use of Administrative Privileges', 'The processes and tools used to track/control/prevent/correct the use, assignment, and configuration of administrative privileges on computers, networks, and applications.'),
+(5, 'Secure Configuration for Hardware and Software on Mobile Devices, Laptops, Workstations and Servers', 'Establish, implement, and actively manage (track, report on, correct) the security configuration of mobile devices, laptops, servers, and workstations using a rigorous configuration management and change control process in order to prevent attackers from exploiting vulnerable services and settings. '),
+(6, 'Maintenance, Monitoring and Analysis of Audit Logs', 'Collect, manage, and analyze audit logs of events that could help detect, understand, or recover from an attack. '),
+(7, 'Email and Web Browser Protections', 'Minimize the attack surface and the opportunities for attackers to manipulate human behavior though their interaction with web browsers and email systems. '),
+(8, 'Malware Defenses', 'Control the installation, spread, and execution of malicious code at multiple points in the enterprise, while optimizing the use of automation to enable rapid updating of defense, data gathering, and corrective action.'),
+(9, 'Limitation and Control of Network Ports, Protocols, and Services', 'Manage (track/control/correct) the ongoing operational use of ports, protocols, and services on networked devices in order to minimize windows of vulnerability available to attackers.'),
+(10, 'Data Recovery Capabilities', 'The processes and tools used to properly back up critical information with a proven methodology for timely recovery of it.'),
+(11, 'Secure Configuration for Network Devices, such as Firewalls, Routers and Switches', 'Establish, implement, and actively manage (track, report on, correct) the security configuration of network infrastructure devices using a rigorous configuration management and change control process in order to prevent attackers from exploiting vulnerable services and settings.'),
+(12, 'Boundary Defense', 'Detect/prevent/correct the flow of information transferring networks of different trust levels with a focus on security-damaging data.'),
+(13, 'Data Protection', 'The processes and tools used to prevent data exfiltration, mitigate the effects of exfiltrated data, and ensure the privacy and integrity of sensitive information.'),
+(14, 'Controlled Access Based on the Need to Know', 'The processes and tools used to track/control/prevent/correct secure access to critical assets (e.g., information, resources, systems) according to the formal determination of which persons, computers, and applications have a need and right to access these critical assets based on an approved classification.'),
+(15, 'Wireless Access Control', 'The processes and tools used to track/control/prevent/correct the security use of wireless local area networks (WLANs), access points, and wireless client systems.'),
+(16, 'Account Monitoring and Control', 'Actively manage the life cycle of system and application accounts - their creation, use, dormancy, deletion - in order to minimize opportunities for attackers to leverage them.'),
+(17, 'Implement a Security Awareness and Training Program', 'For all functional roles in the organization (prioritizing those mission-critical to the business and its security), identify the specific knowledge, skills, and abilities needed to support defense of the enterprise; develop and execute an integrated plan to assess, identify gaps, and remediate through policy, organizational planning, training, and awareness programs.'),
+(18, 'Application Software Security', 'Manage the security life cycle of all in-house developed and acquired software in order to prevent, detect, and correct security weaknesses.'),
+(19, 'Incident Response and Management', 'Protect the organization\'s information, as well as its reputation, by developing and implementing an incident response infrastructure (e.g., plans, defined roles, training, communications, management oversight) for quickly discovering an attack and then effectively containing the damage, eradicating the attacker\'s presence, and restoring the integrity of the network and systems.'),
+(20, 'Penetration Tests and Red Team Exercises', 'Test the overall strength of an organization\'s defense (the technology, the processes, and the people) by simulating the objectives and actions of an attacker.');
 
 -- --------------------------------------------------------
 
@@ -639,6 +696,444 @@ INSERT INTO `parsingbpmn_threat_has_attribute` (`id`, `attribute_id`, `threat_id
 (122, 7, 53),
 (123, 8, 53);
 
+-- --------------------------------------------------------
+
+--
+-- Struttura della tabella `parsingbpmn_threat_has_control`
+--
+
+CREATE TABLE `parsingbpmn_threat_has_control` (
+  `id` int(11) NOT NULL,
+  `control_id` int(11) NOT NULL,
+  `threat_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dump dei dati per la tabella `parsingbpmn_threat_has_control`
+--
+
+INSERT INTO `parsingbpmn_threat_has_control` (`id`, `control_id`, `threat_id`) VALUES
+(1, 10, 1),
+(2, 13, 1),
+(3, 16, 1),
+(4, 17, 1),
+(5, 19, 1),
+(6, 6, 2),
+(7, 19, 2),
+(8, 10, 3),
+(9, 14, 3),
+(10, 19, 3),
+(11, 10, 4),
+(12, 13, 4),
+(13, 14, 4),
+(14, 19, 4),
+(15, 10, 5),
+(16, 13, 5),
+(17, 17, 5),
+(18, 19, 5),
+(19, 14, 6),
+(20, 17, 6),
+(21, 19, 6),
+(22, 6, 7),
+(23, 17, 7),
+(24, 19, 7),
+(25, 10, 8),
+(26, 19, 8),
+(27, 10, 9),
+(28, 19, 9),
+(29, 2, 10),
+(30, 3, 10),
+(31, 5, 10),
+(32, 7, 10),
+(33, 9, 10),
+(34, 11, 10),
+(35, 13, 10),
+(36, 17, 10),
+(37, 18, 10),
+(38, 19, 10),
+(39, 20, 10),
+(40, 1, 11),
+(41, 2, 11),
+(42, 4, 11),
+(43, 5, 11),
+(44, 11, 11),
+(45, 16, 11),
+(46, 17, 11),
+(47, 19, 11),
+(48, 3, 12),
+(49, 6, 12),
+(50, 7, 12),
+(51, 8, 12),
+(52, 17, 12),
+(53, 19, 12),
+(54, 20, 12),
+(55, 10, 13),
+(56, 13, 13),
+(57, 19, 13),
+(58, 3, 14),
+(59, 5, 14),
+(60, 9, 14),
+(61, 11, 14),
+(62, 14, 14),
+(63, 19, 14),
+(64, 1, 15),
+(65, 2, 15),
+(66, 3, 15),
+(67, 6, 15),
+(68, 8, 15),
+(69, 9, 15),
+(70, 12, 15),
+(71, 19, 15),
+(72, 3, 16),
+(73, 4, 16),
+(74, 5, 16),
+(75, 6, 16),
+(76, 9, 16),
+(77, 11, 16),
+(78, 12, 16),
+(79, 14, 16),
+(80, 15, 16),
+(81, 16, 16),
+(82, 18, 16),
+(83, 19, 16),
+(84, 20, 16),
+(85, 7, 17),
+(86, 10, 17),
+(87, 19, 17),
+(88, 1, 18),
+(89, 2, 18),
+(90, 3, 18),
+(91, 5, 18),
+(92, 7, 18),
+(93, 8, 18),
+(94, 9, 18),
+(95, 10, 18),
+(96, 11, 18),
+(97, 13, 18),
+(98, 16, 18),
+(99, 18, 18),
+(100, 19, 18),
+(101, 3, 19),
+(102, 7, 19),
+(103, 8, 19),
+(104, 10, 19),
+(105, 13, 19),
+(106, 18, 19),
+(107, 19, 19),
+(108, 1, 20),
+(109, 2, 20),
+(110, 3, 20),
+(111, 6, 20),
+(112, 7, 20),
+(113, 8, 20),
+(114, 10, 20),
+(115, 13, 20),
+(116, 16, 20),
+(117, 18, 20),
+(118, 19, 20),
+(119, 20, 20),
+(120, 10, 21),
+(121, 19, 21),
+(122, 10, 22),
+(123, 19, 22),
+(124, 10, 23),
+(125, 19, 23),
+(126, 10, 24),
+(127, 19, 24),
+(128, 10, 25),
+(129, 19, 25),
+(130, 10, 26),
+(131, 19, 26),
+(132, 10, 27),
+(133, 19, 27),
+(134, 10, 28),
+(135, 19, 28),
+(136, 10, 29),
+(137, 19, 29),
+(138, 10, 30),
+(139, 19, 30),
+(140, 10, 31),
+(141, 19, 31),
+(142, 1, 32),
+(143, 2, 32),
+(144, 5, 32),
+(145, 6, 32),
+(146, 17, 32),
+(147, 19, 32),
+(148, 1, 33),
+(149, 6, 33),
+(150, 10, 33),
+(151, 14, 33),
+(152, 15, 33),
+(153, 19, 33),
+(154, 1, 34),
+(155, 6, 34),
+(156, 19, 34),
+(157, 6, 35),
+(158, 19, 35),
+(159, 1, 36),
+(160, 2, 36),
+(161, 3, 36),
+(162, 6, 36),
+(163, 8, 36),
+(164, 10, 36),
+(165, 13, 36),
+(166, 18, 36),
+(167, 19, 36),
+(168, 20, 36),
+(169, 6, 37),
+(170, 10, 37),
+(171, 19, 37),
+(172, 17, 38),
+(173, 19, 38),
+(174, 17, 39),
+(175, 19, 39),
+(176, 6, 40),
+(177, 19, 40),
+(178, 1, 41),
+(179, 6, 41),
+(180, 10, 41),
+(181, 19, 41),
+(182, 1, 42),
+(183, 6, 42),
+(184, 10, 42),
+(185, 19, 42),
+(186, 1, 43),
+(187, 3, 43),
+(188, 5, 43),
+(189, 6, 43),
+(190, 8, 43),
+(191, 9, 43),
+(192, 11, 43),
+(193, 13, 43),
+(194, 15, 43),
+(195, 19, 43),
+(196, 20, 43),
+(197, 19, 44),
+(198, 3, 45),
+(199, 5, 45),
+(200, 7, 45),
+(201, 8, 45),
+(202, 13, 45),
+(203, 17, 45),
+(204, 18, 45),
+(205, 19, 45),
+(206, 20, 45),
+(207, 19, 46),
+(208, 1, 47),
+(209, 2, 47),
+(210, 3, 47),
+(211, 5, 47),
+(212, 7, 47),
+(213, 8, 47),
+(214, 18, 47),
+(215, 19, 47),
+(216, 20, 47),
+(217, 3, 48),
+(218, 6, 48),
+(219, 9, 48),
+(220, 11, 48),
+(221, 12, 48),
+(222, 19, 48),
+(223, 2, 49),
+(224, 5, 49),
+(225, 13, 49),
+(226, 16, 49),
+(227, 17, 49),
+(228, 19, 49),
+(229, 3, 50),
+(230, 5, 50),
+(231, 7, 50),
+(232, 8, 50),
+(233, 13, 50),
+(234, 14, 50),
+(235, 17, 50),
+(236, 18, 50),
+(237, 19, 50),
+(238, 20, 50),
+(239, 3, 51),
+(240, 5, 51),
+(241, 7, 51),
+(242, 8, 51),
+(243, 13, 51),
+(244, 17, 51),
+(245, 18, 51),
+(246, 19, 51),
+(247, 6, 52),
+(248, 9, 52),
+(249, 11, 52),
+(250, 12, 52),
+(251, 18, 52),
+(252, 19, 52),
+(253, 20, 52),
+(254, 2, 53),
+(255, 3, 53),
+(256, 5, 53),
+(257, 6, 53),
+(258, 7, 53),
+(259, 8, 53),
+(260, 9, 53),
+(261, 10, 53),
+(262, 11, 53),
+(263, 13, 53),
+(264, 17, 53),
+(265, 18, 53),
+(266, 19, 53),
+(267, 20, 53),
+(268, 7, 54),
+(269, 13, 54),
+(270, 17, 54),
+(271, 19, 54),
+(272, 10, 55),
+(273, 13, 55),
+(274, 19, 55),
+(275, 2, 56),
+(276, 6, 56),
+(277, 9, 56),
+(278, 13, 56),
+(279, 19, 56),
+(280, 1, 57),
+(281, 2, 57),
+(282, 3, 57),
+(283, 8, 57),
+(284, 10, 57),
+(285, 12, 57),
+(286, 13, 57),
+(287, 18, 57),
+(288, 19, 57),
+(289, 20, 57),
+(290, 3, 58),
+(291, 4, 58),
+(292, 5, 58),
+(293, 6, 58),
+(294, 7, 58),
+(295, 8, 58),
+(296, 9, 58),
+(297, 13, 58),
+(298, 14, 58),
+(299, 18, 58),
+(300, 19, 58),
+(301, 20, 58),
+(302, 3, 59),
+(303, 5, 59),
+(304, 8, 59),
+(305, 9, 59),
+(306, 12, 59),
+(307, 18, 59),
+(308, 19, 59),
+(309, 20, 59),
+(310, 3, 60),
+(311, 5, 60),
+(312, 8, 60),
+(313, 9, 60),
+(314, 12, 60),
+(315, 18, 60),
+(316, 19, 60),
+(317, 20, 60),
+(318, 4, 61),
+(319, 6, 61),
+(320, 9, 61),
+(321, 10, 61),
+(322, 13, 61),
+(323, 14, 61),
+(324, 15, 61),
+(325, 16, 61),
+(326, 19, 61),
+(327, 2, 62),
+(328, 4, 62),
+(329, 6, 62),
+(330, 9, 62),
+(331, 10, 62),
+(332, 13, 62),
+(333, 14, 62),
+(334, 15, 62),
+(335, 16, 62),
+(336, 18, 62),
+(337, 19, 62),
+(338, 1, 63),
+(339, 2, 63),
+(340, 3, 63),
+(341, 4, 63),
+(342, 5, 63),
+(343, 6, 63),
+(344, 8, 63),
+(345, 9, 63),
+(346, 13, 63),
+(347, 14, 63),
+(348, 17, 63),
+(349, 18, 63),
+(350, 19, 63),
+(351, 20, 63),
+(352, 17, 64),
+(353, 19, 64),
+(354, 5, 65),
+(355, 9, 65),
+(356, 11, 65),
+(357, 19, 65),
+(358, 1, 66),
+(359, 2, 66),
+(360, 3, 66),
+(361, 6, 66),
+(362, 8, 66),
+(363, 9, 66),
+(364, 11, 66),
+(365, 13, 66),
+(366, 18, 66),
+(367, 19, 66),
+(368, 20, 66),
+(369, 17, 67),
+(370, 19, 67),
+(371, 5, 68),
+(372, 6, 68),
+(373, 9, 68),
+(374, 11, 68),
+(375, 12, 68),
+(376, 14, 68),
+(377, 17, 68),
+(378, 18, 68),
+(379, 19, 68),
+(380, 20, 68),
+(381, 4, 69),
+(382, 5, 69),
+(383, 6, 69),
+(384, 11, 69),
+(385, 14, 69),
+(386, 18, 69),
+(387, 19, 69),
+(388, 3, 70),
+(389, 5, 70),
+(390, 6, 70),
+(391, 9, 70),
+(392, 11, 70),
+(393, 13, 70),
+(394, 14, 70),
+(395, 16, 70),
+(396, 17, 70),
+(397, 18, 70),
+(398, 19, 70),
+(399, 20, 70),
+(400, 3, 71),
+(401, 5, 71),
+(402, 6, 71),
+(403, 9, 71),
+(404, 11, 71),
+(405, 13, 71),
+(406, 14, 71),
+(407, 16, 71),
+(408, 17, 71),
+(409, 18, 71),
+(410, 19, 71),
+(411, 20, 71),
+(412, 13, 72),
+(413, 14, 72),
+(414, 17, 72),
+(415, 19, 72),
+(416, 13, 73),
+(417, 14, 73),
+(418, 17, 73),
+(419, 19, 73),
+(420, 19, 74);
+
 --
 -- Indici per le tabelle scaricate
 --
@@ -753,6 +1248,12 @@ ALTER TABLE `parsingbpmn_attribute_value`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indici per le tabelle `parsingbpmn_control`
+--
+ALTER TABLE `parsingbpmn_control`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indici per le tabelle `parsingbpmn_process`
 --
 ALTER TABLE `parsingbpmn_process`
@@ -780,6 +1281,14 @@ ALTER TABLE `parsingbpmn_threat_has_attribute`
   ADD KEY `parsingBPMN_threat_h_threat_id_fbeae7da_fk_parsingBP` (`threat_id`);
 
 --
+-- Indici per le tabelle `parsingbpmn_threat_has_control`
+--
+ALTER TABLE `parsingbpmn_threat_has_control`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `parsingbpmn_threat_h_control_id_7388a9d5_fk_parsingbp` (`control_id`),
+  ADD KEY `parsingbpmn_threat_h_threat_id_e0101e51_fk_parsingbp` (`threat_id`);
+
+--
 -- AUTO_INCREMENT per le tabelle scaricate
 --
 
@@ -799,7 +1308,7 @@ ALTER TABLE `auth_group_permissions`
 -- AUTO_INCREMENT per la tabella `auth_permission`
 --
 ALTER TABLE `auth_permission`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=61;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=69;
 
 --
 -- AUTO_INCREMENT per la tabella `auth_user`
@@ -829,13 +1338,13 @@ ALTER TABLE `django_admin_log`
 -- AUTO_INCREMENT per la tabella `django_content_type`
 --
 ALTER TABLE `django_content_type`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT per la tabella `django_migrations`
 --
 ALTER TABLE `django_migrations`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
 
 --
 -- AUTO_INCREMENT per la tabella `parsingbpmn_asset`
@@ -868,6 +1377,12 @@ ALTER TABLE `parsingbpmn_attribute_value`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
+-- AUTO_INCREMENT per la tabella `parsingbpmn_control`
+--
+ALTER TABLE `parsingbpmn_control`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+
+--
 -- AUTO_INCREMENT per la tabella `parsingbpmn_process`
 --
 ALTER TABLE `parsingbpmn_process`
@@ -890,6 +1405,12 @@ ALTER TABLE `parsingbpmn_threat`
 --
 ALTER TABLE `parsingbpmn_threat_has_attribute`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=124;
+
+--
+-- AUTO_INCREMENT per la tabella `parsingbpmn_threat_has_control`
+--
+ALTER TABLE `parsingbpmn_threat_has_control`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=421;
 
 --
 -- Limiti per le tabelle scaricate
@@ -962,6 +1483,13 @@ ALTER TABLE `parsingbpmn_process`
 ALTER TABLE `parsingbpmn_threat_has_attribute`
   ADD CONSTRAINT `parsingBPMN_threat_h_attribute_id_8e431819_fk_parsingBP` FOREIGN KEY (`attribute_id`) REFERENCES `parsingbpmn_attribute` (`id`),
   ADD CONSTRAINT `parsingBPMN_threat_h_threat_id_fbeae7da_fk_parsingBP` FOREIGN KEY (`threat_id`) REFERENCES `parsingbpmn_threat` (`id`);
+
+--
+-- Limiti per la tabella `parsingbpmn_threat_has_control`
+--
+ALTER TABLE `parsingbpmn_threat_has_control`
+  ADD CONSTRAINT `parsingbpmn_threat_h_control_id_7388a9d5_fk_parsingbp` FOREIGN KEY (`control_id`) REFERENCES `parsingbpmn_control` (`id`),
+  ADD CONSTRAINT `parsingbpmn_threat_h_threat_id_e0101e51_fk_parsingbp` FOREIGN KEY (`threat_id`) REFERENCES `parsingbpmn_threat` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

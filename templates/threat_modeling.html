@@ -7,6 +7,12 @@
         <p style="font-family: 'Times New Roman';font-size: medium">
             Below is a detailed report on the possible threats that can occur for each asset.
         </p>
+        <p style="font-family: 'Times New Roman';font-size: medium;">
+            <b style="font-family: 'Times New Roman';font-size: large;">
+                N.B.:
+            </b>
+            Click on the threat to evaluate the countermeasures associated with it.
+        </p>
         <table class="table">
             <thead>
             <tr>
@@ -14,6 +20,7 @@
                 <th style="text-align: center">Asset type</th>
                 <th style="text-align: center">Asset attributes</th>
                 <th style="text-align: center">Threats</th>
+
             </tr>
             </thead>
             <tbody>
@@ -48,6 +55,26 @@
                                                 </div>
                                                 <div class="modal-body">
                                                     <p>{{ threat.threat.description }}</p>
+                                                    <h2>Controls:</h2>
+                                                    {% for controls in info.3 %}
+                                                        <ol>
+                                                            {% for control in controls %}
+                                                                {% if control.threat == threat.threat %}
+                                                                <li>{{ control.control }}</li>
+                                                                {% endif %}
+                                                            {% endfor %}
+                                                        </ol>
+                                                    {% endfor %}
+                                                    <h2>Description of controls:</h2>
+                                                    {% for controls in info.3 %}
+                                                        <ol>
+                                                            {% for control in controls %}
+                                                                {% if control.threat == threat.threat %}
+                                                                <li>{{ control.control.description }}</li>
+                                                                {% endif %}
+                                                            {% endfor %}
+                                                        </ol>
+                                                    {% endfor %}
                                                 </div>
                                                 <div class="modal-footer">
                                                     <button type="button" class="btn btn-secondary"

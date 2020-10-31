@@ -68,7 +68,7 @@
                                 <option value="{{ value.pk }}">{{ value.attribute_value }}</option>
                             {% endfor %}
                         </select>
-                    </td style="font-family: 'Times New Roman';font-size: larger">
+                    </td>
                 {% elif task.0.asset_type.name == "Service task" %}
                     <td style="font-family: 'Times New Roman';font-size: larger">
                     <form method="POST" action="{% url 'process_enrichment' task.0.process.pk %}">

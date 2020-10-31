@@ -92,6 +92,17 @@ class Attribute(models.Model):
     def __str__(self):
         return self.attribute_name
 
+class Control(models.Model):
+    name = models.CharField(max_length=100)
+    description = models.CharField(max_length=500)
+
+    class Meta:
+        verbose_name="Control"
+        verbose_name_plural="Controls"
+
+    def __str__(self):
+        return self.name
+
 class Asset_has_attribute(models.Model):
     asset = models.ForeignKey(Asset,on_delete=models.CASCADE)
     attribute = models.ForeignKey(Attribute,on_delete=models.CASCADE)
@@ -99,5 +110,9 @@ class Asset_has_attribute(models.Model):
 class Threat_has_attribute(models.Model):
     threat = models.ForeignKey(Threat,on_delete=models.CASCADE)
     attribute = models.ForeignKey(Attribute,on_delete=models.CASCADE)
+
+class Threat_has_control(models.Model):
+    threat = models.ForeignKey(Threat, on_delete=models.CASCADE)
+    control = models.ForeignKey(Control, on_delete=models.CASCADE)
 
 # AL MODELLO DEI DATI MANCA SOLO LA PARTE RELATIVA AI THREAT AGENTS

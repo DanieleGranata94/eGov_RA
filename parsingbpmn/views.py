@@ -11,7 +11,7 @@ from openpyxl.styles import Font, Border, Side
 
 from .forms import ProcessForm, SystemForm
 from .models import Process, Asset, System, Asset_has_attribute, Attribute, Asset_type, Attribute_value, \
-    Threat_has_attribute
+    Threat_has_attribute, Threat_has_control
 from .bpmn_python_master.bpmn_python import bpmn_diagram_rep as diagram
 
 # Create your views here.
@@ -206,7 +206,7 @@ def process_view_attribute(request,pk):
                 'task_info':task_info,'send':send,'receive':receive,'user':user,'manual':manual,'service':service,
                 'script':script,'business':business})
     else:
-        return redirect('threat_modeling',pk)
+        return redirect('threats_and_controls',pk)
 
 def process_enrichment(request,pk):
     if request.method == "POST":
@@ -227,21 +227,64 @@ def process_enrichment(request,pk):
                 asset_has_attribute = Asset_has_attribute(asset=asset,attribute=attribute)
                 asset_has_attribute.save()
 
-        return redirect('threat_modeling',pk)
+        return redirect('threats_and_controls',pk)
     else:
         return redirect('process_enrichment',pk)
 
-def threat_modeling(request,pk):
-    assets = Asset.objects.filter(process=Process.objects.get(pk=pk))
+def threats_and_controls(request,pk):
+    process = Process.objects.get(pk=pk)
+    assets = Asset.objects.filter(process=process)
     attributes = []
     threats = []
+    controls = []
     for asset in assets:
         attributes.append(Asset_has_attribute.objects.filter(asset=asset))
     for list_attribute in attributes:
         for attribute in list_attribute:
             attribute = attribute.attribute
             threats.append(Threat_has_attribute.objects.filter(attribute=attribute))
-    threat_model_info = zip(assets,attributes,threats)
+    for threats_of_asset in threats:
+        sublist_controls = []
+        for threat in threats_of_asset:
+            threat = threat.threat
+            sublist_controls.append(Threat_has_control.objects.filter(threat=threat))
+        controls.append(sublist_controls)
+
+    clear_list_threats = []
+    for threat_list in threats:
+        for threat in threat_list:
+            if threat.threat not in clear_list_threats:
+                clear_list_threats.append(threat.threat)
+
+    clear_list_controls = []
+    for control_of_asset in controls:
+        for control_of_threat in control_of_asset:
+            for control in control_of_threat:
+                if control.control not in clear_list_controls:
+                    clear_list_controls.append(control.control)
+
+    return render(request, 'threats_and_controls.html', {
+        'process_name':process.name,'clear_list_threats': clear_list_threats,'clear_list_controls':clear_list_controls,'pk':pk
+    })
+
+def threat_modeling(request,pk):
+    assets = Asset.objects.filter(process=Process.objects.get(pk=pk))
+    attributes = []
+    threats = []
+    controls = []
+    for asset in assets:
+        attributes.append(Asset_has_attribute.objects.filter(asset=asset))
+    for list_attribute in attributes:
+        for attribute in list_attribute:
+            attribute = attribute.attribute
+            threats.append(Threat_has_attribute.objects.filter(attribute=attribute))
+    for threats_of_asset in threats:
+        sublist_controls = []
+        for threat in threats_of_asset:
+            threat = threat.threat
+            sublist_controls.append(Threat_has_control.objects.filter(threat=threat))
+        controls.append(sublist_controls)
+    threat_model_info = zip(assets,attributes,threats,controls)
     return render(request, 'threat_modeling.html',{
         'threat_model_info':threat_model_info,'pk':pk
     })

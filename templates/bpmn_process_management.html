@@ -1,16 +1,17 @@
 {% extends 'base.html' %}
 
 {% block content %}
+
     <h1>Upload BPMN process</h1>
     <p style="font-family: 'Times New Roman';font-size: medium">
         This form allows you to create a new process for the selected system,
         in case the process to be analyzed is not already present in the list below.
     </p>
-      <form method="POST" enctype="multipart/form-data" style="font-family: 'Times New Roman';font-size: large">
+    <form method="POST" enctype="multipart/form-data" style="font-family: 'Times New Roman';font-size: large">
         {% csrf_token %}
-          {{ form.as_p }}
+        {{ form.as_p }}
         <button type="submit" class="btn btn-primary">Upload file</button>
-      </form>
+    </form>
 
     <h1>Uploaded BPMN processes</h1>
     <p style="font-family: 'Times New Roman';font-size: medium">
@@ -23,43 +24,50 @@
     </p>
     <table class="table">
         <thead>
-            <tr>
-                <th>Name</th>
-                <th style="text-align: center">BPMN enrichment</th>
-                <th style="text-align: center">Download</th>
-                <th style="text-align: center">Select</th>
-                <th style="text-align: center">Delete</th>
-            </tr>
+        <tr>
+            <th>Name</th>
+            <th style="text-align: center">BPMN enrichment</th>
+            <!--<th style="text-align: center">View</th>-->
+            <th style="text-align: center">Download</th>
+            <th style="text-align: center">Select</th>
+            <th style="text-align: center">Delete</th>
+        </tr>
         </thead>
         <tbody>
-            {% for process in processes_info %}
-                <tr>
-                    <td style="font-family: 'Times New Roman';font-size: larger"> {{ process.0.name }}</td>
-                    {% if process.1 == False %}
-                        <td style="text-align: center;font-size: 200%">✅ </td>
-                    {% else %}
-                        <td style="text-align: center;font-size: 200%">❌</td>
-                    {% endif %}
+        {% for process in processes_info %}
+            <tr>
+                <td style="font-family: 'Times New Roman';font-size: larger"> {{ process.0.name }}</td>
+                {% if process.1 == False %}
+                    <td style="text-align: center;font-size: 200%">✅</td>
+                {% else %}
+                    <td style="text-align: center;font-size: 200%">❌</td>
+                {% endif %}
 
-                    <td style="text-align: center">
-                        <a href="{{ process.0.xml.url }}" class="btn btn-primary btn-sm">
-                            Download file
-                        </a>
-                    </td>
-                    <td style="text-align: center">
-                        <form method="POST" action="{% url 'process_view_task_type' process.0.pk %}">
-                            {% csrf_token %}
-                            <button type="submit" class="btn btn-primary btn-sm">Select process</button>
-                        </form>
-                    </td>
-                    <td style="text-align: center">
-                        <form method="POST" action="{% url 'delete_process' process.0.pk %}">
-                            {% csrf_token %}
-                            <button type="submit" class="btn btn-danger btn-sm">Delete process</button>
-                        </form>
-                    </td>
-                </tr>
-            {% endfor %}
+                <!--<td style="text-align: center">
+                    <button class="btn btn-primary btn-sm" onclick="viewDiagram({{ process.0.xml.url }});">
+                        View diagram
+                    </button>
+                </td>-->
+
+                <td style="text-align: center">
+                    <a href="{{ process.0.xml.url }}" class="btn btn-primary btn-sm">
+                        Download file
+                    </a>
+                </td>
+                <td style="text-align: center">
+                    <form method="POST" action="{% url 'process_view_task_type' process.0.pk %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-primary btn-sm">Select process</button>
+                    </form>
+                </td>
+                <td style="text-align: center">
+                    <form method="POST" action="{% url 'delete_process' process.0.pk %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger btn-sm">Delete process</button>
+                    </form>
+                </td>
+            </tr>
+        {% endfor %}
         </tbody>
     </table>
 
