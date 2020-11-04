@@ -27,7 +27,7 @@
         <tr>
             <th>Name</th>
             <th style="text-align: center">BPMN enrichment</th>
-            <!--<th style="text-align: center">View</th>-->
+            <th style="text-align: center">BPMN viewer</th>
             <th style="text-align: center">Download</th>
             <th style="text-align: center">Select</th>
             <th style="text-align: center">Delete</th>
@@ -43,11 +43,12 @@
                     <td style="text-align: center;font-size: 200%">❌</td>
                 {% endif %}
 
-                <!--<td style="text-align: center">
-                    <button class="btn btn-primary btn-sm" onclick="viewDiagram({{ process.0.xml.url }});">
-                        View diagram
-                    </button>
-                </td>-->
+                <td style="text-align: center">
+                    <form method="POST" action="{% url 'bpmn_viewer' process.0.pk %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-primary btn-sm">View BPMN</button>
+                    </form>
+                </td>
 
                 <td style="text-align: center">
                     <a href="{{ process.0.xml.url }}" class="btn btn-primary btn-sm">

@@ -423,3 +423,11 @@ def export_threat_modeling(request,pk):
         workbook.save(response)
 
         return response
+
+def bpmn_viewer(request,pk):
+    path = Process.objects.get(pk=pk).xml
+    path = str(path)
+    name = Process.objects.get(pk=pk).name
+    return render(request,'bpmn_viewer.html',{
+        'path':path, 'name':name
+    })
