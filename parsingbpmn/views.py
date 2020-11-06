@@ -123,7 +123,7 @@ def bpmn_process_management(request,pk):
         check_box.append(check_attribute)
     processes_info = zip(processes,check_box)
     return render(request,'bpmn_process_management.html',{
-        'form':form,'processes_info':processes_info
+        'form':form,'processes_info':processes_info,'pk':pk, 'processes':processes
     })
 
 def delete_system(request,pk):
@@ -147,8 +147,11 @@ def process_view_task_type(request,pk):
             check_attribute = True
     if check_attribute == True:
         asset_type = Asset_type.objects.all()
+        system = Process.objects.get(pk=pk).system
+        processes = Process.objects.filter(system=system)
         return render(request, 'process_view_task_type.html', {
-            'task_list':task_list,'asset_type':asset_type})
+            'task_list':task_list,'asset_type':asset_type,'pk':pk,'processes':processes
+        })
     else:
         return redirect('process_view_attribute', pk)
 
@@ -202,34 +205,82 @@ def process_view_attribute(request,pk):
         script = Attribute.objects.filter(asset_type=Asset_type.objects.get(name="Script task"))
         business = Attribute.objects.filter(asset_type=Asset_type.objects.get(name="Business rule task"))
         task_info = zip(task_list,list_attributes)
+        system = Process.objects.get(pk=pk).system
+        processes = Process.objects.filter(system=system)
         return render(request, 'process_view_attribute.html', {
                 'task_info':task_info,'send':send,'receive':receive,'user':user,'manual':manual,'service':service,
-                'script':script,'business':business})
+                'script':script,'business':business,'pk':pk,'processes':processes})
     else:
         return redirect('threats_and_controls',pk)
 
 def process_enrichment(request,pk):
     if request.method == "POST":
-        assets_for_process = Asset.objects.filter(process=Process.objects.get(pk=pk))
-        attributes_enrichment = []
-        attributes = []
-        for asset in assets_for_process:
-            attributes_enrichment.append(request.POST.get(str(asset.pk)))
-        for attribute_enrichment in attributes_enrichment:
-            if attribute_enrichment != None:
-                attribute_enrichment = int(attribute_enrichment)
-                attributes.append(Attribute.objects.get(pk=attribute_enrichment))
-            else:
-                attributes.append(None)
+        task_list = Asset.objects.filter(process=Process.objects.get(pk=pk))
+        check_attribute = False
+        for task in task_list:
+            if not Asset_has_attribute.objects.filter(asset=task):
+                check_attribute = True
+        if check_attribute == True:
+            assets_for_process = Asset.objects.filter(process=Process.objects.get(pk=pk))
+            attributes_enrichment = []
+            attributes = []
+            for asset in assets_for_process:
+                attributes_enrichment.append(request.POST.get(str(asset.pk)))
+            for attribute_enrichment in attributes_enrichment:
+                if attribute_enrichment != None:
+                    attribute_enrichment = int(attribute_enrichment)
+                    attributes.append(Attribute.objects.get(pk=attribute_enrichment))
+                else:
+                    attributes.append(None)
 
-        for asset,attribute in zip(assets_for_process,attributes):
-            if attribute != None:
-                asset_has_attribute = Asset_has_attribute(asset=asset,attribute=attribute)
-                asset_has_attribute.save()
+            for asset,attribute in zip(assets_for_process,attributes):
+                if attribute != None:
+                    asset_has_attribute = Asset_has_attribute(asset=asset,attribute=attribute)
+                    asset_has_attribute.save()
 
-        return redirect('threats_and_controls',pk)
+            return redirect('threats_and_controls',pk)
+        else:
+            assets_for_process = Asset.objects.filter(process=Process.objects.get(pk=pk))
+            attributes_enrichment = []
+            attributes = []
+            for asset in assets_for_process:
+                attributes_enrichment.append(request.POST.get(str(asset.pk)))
+            for attribute_enrichment in attributes_enrichment:
+                if attribute_enrichment != None:
+                    attribute_enrichment = int(attribute_enrichment)
+                    attributes.append(Attribute.objects.get(pk=attribute_enrichment))
+                else:
+                    attributes.append(None)
+
+            for asset, attribute in zip(assets_for_process, attributes):
+                if attribute != None:
+                    Asset_has_attribute.objects.filter(asset=asset).update(attribute=attribute)
+            return redirect('threats_and_controls', pk)
     else:
         return redirect('process_enrichment',pk)
+
+def edit_process(request,pk):
+    if request.method == "POST":
+        assets = Asset.objects.filter(process=Process.objects.get(pk=pk))
+        assets_type = []
+        list_attributes = []
+        for asset in assets:
+            assets_type.append(asset.asset_type)
+            list_attributes.append("empty")
+
+        task_info = zip(assets,list_attributes)
+        send = Attribute.objects.filter(asset_type=Asset_type.objects.get(name="Send task"))
+        receive = Attribute.objects.filter(asset_type=Asset_type.objects.get(name="Receive task"))
+        user = Attribute.objects.filter(asset_type=Asset_type.objects.get(name="User task"))
+        manual = Attribute.objects.filter(asset_type=Asset_type.objects.get(name="Manual task"))
+        service = Attribute.objects.filter(asset_type=Asset_type.objects.get(name="Service task"))
+        script = Attribute.objects.filter(asset_type=Asset_type.objects.get(name="Script task"))
+        business = Attribute.objects.filter(asset_type=Asset_type.objects.get(name="Business rule task"))
+        system = Process.objects.get(pk=pk).system
+        processes = Process.objects.filter(system=system)
+        return render(request, 'process_view_attribute.html', {
+            'task_info': task_info, 'send': send, 'receive': receive, 'user': user, 'manual': manual,
+            'service': service,'script': script, 'business': business, 'pk': pk, 'processes': processes})
 
 def threats_and_controls(request,pk):
     process = Process.objects.get(pk=pk)
@@ -263,8 +314,10 @@ def threats_and_controls(request,pk):
                 if control.control not in clear_list_controls:
                     clear_list_controls.append(control.control)
 
+    system = Process.objects.get(pk=pk).system
+    processes = Process.objects.filter(system=system)
     return render(request, 'threats_and_controls.html', {
-        'process_name':process.name,'clear_list_threats': clear_list_threats,'clear_list_controls':clear_list_controls,'pk':pk
+        'process_name':process.name,'clear_list_threats': clear_list_threats,'clear_list_controls':clear_list_controls,'pk':pk,'processes':processes
     })
 
 def threat_modeling(request,pk):
@@ -284,9 +337,24 @@ def threat_modeling(request,pk):
             threat = threat.threat
             sublist_controls.append(Threat_has_control.objects.filter(threat=threat))
         controls.append(sublist_controls)
-    threat_model_info = zip(assets,attributes,threats,controls)
+
+    controls_per_asset = []
+    for asset in threats:
+        list_controls = []
+        for threat in asset:
+            threat = threat.threat
+            controls_per_threat = Threat_has_control.objects.filter(threat=threat)
+            for control in controls_per_threat:
+                control= control.control
+                if control not in list_controls:
+                    list_controls.append(control)
+        controls_per_asset.append(list_controls)
+
+    threat_model_info = zip(assets, attributes, threats, controls,controls_per_asset)
+    system = Process.objects.get(pk=pk).system
+    processes = Process.objects.filter(system=system)
     return render(request, 'threat_modeling.html',{
-        'threat_model_info':threat_model_info,'pk':pk
+        'threat_model_info':threat_model_info,'pk':pk,'processes':processes
     })
 
 def export_threat_modeling(request,pk):
@@ -305,7 +373,7 @@ def export_threat_modeling(request,pk):
         # Get active worksheet/tab
         worksheet = workbook.active
         worksheet.title = 'Threat_modeling_REPORT'
-        columns = ['Asset name', 'Asset type', 'Asset attributes', 'Threats']
+        columns = ['Asset name', 'Asset type', 'Asset attributes', 'Threats','Policy per asset']
         row_num = 1
 
         # Assign the titles for each cell of the header
@@ -342,7 +410,19 @@ def export_threat_modeling(request,pk):
                 threat_sublist.append(element.threat.name)
             threats_list.append(threat_sublist)
 
-        for asset,attribute,threat in zip(assets,attributes_list,threats_list):
+        controls_per_asset = []
+        for asset in threats:
+            list_controls = []
+            for threat in asset:
+                threat = threat.threat
+                controls_per_threat = Threat_has_control.objects.filter(threat=threat)
+                for control in controls_per_threat:
+                    control = control.control
+                    if control not in list_controls:
+                        list_controls.append(control)
+            controls_per_asset.append(list_controls)
+
+        for asset,attribute,threat,control in zip(assets,attributes_list,threats_list,controls_per_asset):
             row_num += 1
 
             if not threat:
@@ -355,7 +435,8 @@ def export_threat_modeling(request,pk):
                 asset.name,
                 asset.asset_type.name,
                 str(attribute[0]),
-                threat0
+                threat0,
+                str(control[0])
             ]
 
             # Assign the data for each cell of the row
@@ -391,17 +472,42 @@ def export_threat_modeling(request,pk):
                                          bottom=Side(border_style="thin", color='FF000000'), )
 
             count_threats = 0
+            count_controls = 0
             row_num = old_row
-            while count_threats < len(threat)-1:
-                count_threats += 1
+            while count_threats < len(threat)-1 or count_controls < len(control)-1:
                 row_num += 1
 
-                row = [
-                    '',
-                    '',
-                    '',
-                    str(threat[count_threats])
-                ]
+                if count_threats < len(threat)-1 and count_controls < len(control)-1:
+                    count_threats += 1
+                    count_controls += 1
+
+                    row = [
+                        '',
+                        '',
+                        '',
+                        str(threat[count_threats]),
+                        str(control[count_controls])
+                    ]
+                elif count_threats < len(threat)-1 and not count_controls < len(control)-1:
+                    count_threats += 1
+
+                    row = [
+                        '',
+                        '',
+                        '',
+                        str(threat[count_threats]),
+                        ''
+                    ]
+                else:
+                    count_controls += 1
+
+                    row = [
+                        '',
+                        '',
+                        '',
+                        '',
+                        str(control[count_controls])
+                    ]
 
                 for col_num, cell_value in enumerate(row, 1):
                     cell = worksheet.cell(row=row_num, column=col_num)
@@ -425,9 +531,7 @@ def export_threat_modeling(request,pk):
         return response
 
 def bpmn_viewer(request,pk):
-    path = Process.objects.get(pk=pk).xml
-    path = str(path)
-    name = Process.objects.get(pk=pk).name
+    process = Process.objects.get(pk=pk)
     return render(request,'bpmn_viewer.html',{
-        'path':path, 'name':name
+        'process':process
     })

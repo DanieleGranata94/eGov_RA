@@ -20,6 +20,7 @@
                 <th style="text-align: center">Asset type</th>
                 <th style="text-align: center">Asset attributes</th>
                 <th style="text-align: center">Threats</th>
+                <th style="text-align: center">Policy per asset</th>
 
             </tr>
             </thead>
@@ -88,6 +89,13 @@
                                 </li>
                             {% endfor %}
                         </ol>
+                    </td>
+                    <td style="font-family: 'Times New Roman';font-size: larger">
+                        <ul>
+                            {% for control in info.4 %}
+                                <li>{{ control }}</li>
+                            {% endfor %}
+                        </ul>
                     </td>
                 </tr>
             {% endfor %}

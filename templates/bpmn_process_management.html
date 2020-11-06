@@ -22,7 +22,7 @@
         N.B.: If the process has not yet undergone the enrichment phase (where necessary),
         this will be marked with a red cross. Otherwise with a green tick.
     </p>
-    <table class="table">
+    <table class="table" id="dataTable">
         <thead>
         <tr>
             <th>Name</th>
@@ -30,6 +30,7 @@
             <th style="text-align: center">BPMN viewer</th>
             <th style="text-align: center">Download</th>
             <th style="text-align: center">Select</th>
+            <th style="text-align: center">Edit</th>
             <th style="text-align: center">Delete</th>
         </tr>
         </thead>
@@ -59,6 +60,16 @@
                     <form method="POST" action="{% url 'process_view_task_type' process.0.pk %}">
                         {% csrf_token %}
                         <button type="submit" class="btn btn-primary btn-sm">Select process</button>
+                    </form>
+                </td>
+                <td style="text-align: center">
+                    <form method="POST" action="{% url 'edit_process' process.0.pk %}">
+                        {% csrf_token %}
+                            {% if process.1 == False %}
+                                <button type="submit" class="btn btn-primary btn-sm">Edit</button>
+                            {% else %}
+                                <button type="submit" class="btn btn-primary btn-sm" disabled>Edit</button>
+                            {% endif %}
                     </form>
                 </td>
                 <td style="text-align: center">

@@ -20,7 +20,7 @@ from django.conf.urls.static import static
 
 from parsingbpmn.views import bpmn_process_management, system_management, \
     delete_process, delete_system, process_enrichment, threat_modeling, process_view_task_type, process_view_attribute, \
-    task_type_enrichment, export_threat_modeling, threats_and_controls, bpmn_viewer
+    task_type_enrichment, export_threat_modeling, threats_and_controls, bpmn_viewer, edit_process
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -28,6 +28,7 @@ urlpatterns = [
     path('bpmn_process_management/<int:pk>', bpmn_process_management, name='bpmn_process_management'),
     path('process_view_task_type/<int:pk>', process_view_task_type, name='process_view_task_type'),
     path('process_view_attribute/<int:pk>', process_view_attribute, name='process_view_attribute'),
+    path('edit_process/<int:pk>', edit_process, name='edit_process'),
     path('delete_process/<int:pk>', delete_process, name='delete_process'),
     path('delete_system/<int:pk>', delete_system, name='delete_system'),
     path('process_enrichment/<int:pk>', process_enrichment, name='process_enrichment'),

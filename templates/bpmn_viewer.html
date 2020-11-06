@@ -2,7 +2,7 @@
 
 {% block content %}
 
-    <h1>Process viewer: {{ name }}</h1>
+    <h1>Process viewer: {{ process.name }}</h1>
 
     <script src="https://unpkg.com/bpmn-js@7.4.0/dist/bpmn-viewer.development.js"></script>
 
@@ -12,8 +12,8 @@
     <!-- needed for this example only -->
     <script src="https://unpkg.com/jquery@3.3.1/dist/jquery.js"></script>
 
-    <!-- Abbiamo messo 600px perchè ci sembra una misura giusta, ma non si può fare resize automatico perchè il problema sta nelle API -->
-    <div id="canvas" style =" height: 600px " ></div>
+    <!-- Abbiamo messo 490px perchè ci sembra una misura giusta, ma non si può fare resize automatico perchè il problema sta nelle API -->
+    <div id="canvas" style =" height: 490px " ></div>
 
     <script>
 
@@ -82,11 +82,18 @@
         }
       }
 
-        var path = "../"+"{{ path }}";
+        var path = "../"+"{{ process.xml }}";
         console.log(path);
         openDiagram(readTextFile(path));
       // load external diagram file via AJAX and open it
       //$.get(diagramUrl, openDiagram, 'text');
     </script>
+
+    <br>
+
+    <form method="POST" action="{% url 'bpmn_process_management' process.system.pk %}">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-primary btn-sm">Back in process management</button>
+    </form>
 
 {% endblock %}
