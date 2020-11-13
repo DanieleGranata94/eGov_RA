@@ -436,7 +436,7 @@ def export_threat_modeling(request,pk):
                 asset.asset_type.name,
                 str(attribute[0]),
                 threat0,
-                str(control[0])
+                "CIS."+str(control[0].pk)+" - "+str(control[0])
             ]
 
             # Assign the data for each cell of the row
@@ -486,7 +486,7 @@ def export_threat_modeling(request,pk):
                         '',
                         '',
                         str(threat[count_threats]),
-                        str(control[count_controls])
+                        "CIS." + str(control[count_controls].pk) + " - " + str(control[count_controls])
                     ]
                 elif count_threats < len(threat)-1 and not count_controls < len(control)-1:
                     count_threats += 1
@@ -506,7 +506,7 @@ def export_threat_modeling(request,pk):
                         '',
                         '',
                         '',
-                        str(control[count_controls])
+                        "CIS." + str(control[count_controls].pk) + " - " + str(control[count_controls])
                     ]
 
                 for col_num, cell_value in enumerate(row, 1):
