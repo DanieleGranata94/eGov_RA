@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Creato il: Ott 31, 2020 alle 10:37
+-- Creato il: Dic 08, 2020 alle 09:57
 -- Versione del server: 10.4.11-MariaDB
 -- Versione PHP: 7.2.30
 
@@ -305,6 +305,68 @@ CREATE TABLE `parsingbpmn_asset` (
   `asset_type_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Dump dei dati per la tabella `parsingbpmn_asset`
+--
+
+INSERT INTO `parsingbpmn_asset` (`id`, `name`, `process_id`, `asset_type_id`) VALUES
+(331, 'conduct research', 20, 3),
+(332, 'sign an ad', 20, 4),
+(333, 'ask for publication', 20, 4),
+(334, 'publish an ad', 20, 3),
+(335, 'attribute a progress number to each candidature', 20, 3),
+(336, 'draw up the candidate lists', 20, 3),
+(337, 'check and control the lists', 20, 3),
+(338, 'send the lists', 20, 1),
+(339, 'Receive the lists', 20, 2),
+(340, 'publish the lists on the CRC portal', 20, 3),
+(341, 'Receive the lists', 20, 2),
+(342, 'propose lists for #1 Permanent Committee', 20, 1),
+(343, 'Receive the proposed lists', 20, 2),
+(344, 'assign lists to #1 Permanent Committee', 20, 1),
+(345, 'receive the assigned lists', 20, 2),
+(346, 'express an opinion about these lists', 20, 1),
+(347, 'propose the registration of the order of the day', 20, 1),
+(348, 'receive the order of the day', 20, 2),
+(349, 'communicate the order of the day', 20, 4),
+(350, 'send the updated order of the day', 20, 1),
+(351, 'Receive the approved order of the day', 20, 2),
+(352, 'discuss the order of the day', 20, 4),
+(353, 'send the report with the results', 20, 1),
+(354, 'Government president receive the information', 20, 2),
+(355, 'publish the winner lists on CRC portal', 20, 3),
+(356, 'Trasparency unit receive the information', 20, 2),
+(357, 'receive the updated order of the day', 20, 2),
+(358, 'approve the order of the day', 20, 4),
+(359, 'send the approved order of the day', 20, 1),
+(360, 'inform regarding the report', 20, 1),
+(361, 'sign the report', 20, 4),
+(362, 'Receive the report with the results', 20, 2),
+(363, 'Inform regarding the legal decree', 20, 1),
+(364, 'write a legal decree that substitutes the report', 20, 4),
+(365, 'apply to the position using SPID', 20, 3),
+(508, 'receive student\'s data from mail service provider', 28, 2),
+(509, 'Student Data Retention for 10 Years', 28, 5),
+(510, 'Send data to Recruiter', 28, 1),
+(511, 'Send data to Ministry', 28, 1),
+(512, 'Send personal data modification request', 28, 1),
+(513, 'verification through career service provider', 28, 5),
+(514, 'Receive result verify', 28, 2),
+(515, 'Fill in Personal Data and Health Status and submit', 28, 3),
+(516, 'Send data', 28, 1),
+(517, 'Receive modification request', 28, 2),
+(518, 'Recruiter receive student\'s data', 28, 2),
+(519, 'contact the student', 28, 3),
+(520, 'Analyze the profile', 28, 4),
+(521, 'Ministry receive student\'s data', 28, 2),
+(522, 'Retention student\'s data', 28, 5),
+(523, 'send result Verify', 28, 1),
+(524, 'Verify data', 28, 5),
+(525, 'Receive data from Student', 28, 2),
+(526, 'Send data to Office', 28, 1),
+(527, 'Receive modification request from office', 28, 2),
+(528, 'Send modifcation request to student', 28, 1);
+
 -- --------------------------------------------------------
 
 --
@@ -316,6 +378,68 @@ CREATE TABLE `parsingbpmn_asset_has_attribute` (
   `asset_id` int(11) NOT NULL,
   `attribute_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dump dei dati per la tabella `parsingbpmn_asset_has_attribute`
+--
+
+INSERT INTO `parsingbpmn_asset_has_attribute` (`id`, `asset_id`, `attribute_id`) VALUES
+(223, 332, 9),
+(224, 333, 9),
+(225, 349, 9),
+(226, 352, 9),
+(227, 358, 9),
+(228, 361, 9),
+(229, 364, 9),
+(230, 331, 7),
+(231, 334, 7),
+(232, 335, 8),
+(233, 336, 8),
+(234, 337, 8),
+(235, 338, 2),
+(236, 339, 5),
+(237, 340, 7),
+(238, 341, 5),
+(239, 342, 1),
+(240, 343, 4),
+(241, 344, 1),
+(242, 345, 4),
+(243, 346, 2),
+(244, 347, 1),
+(245, 348, 4),
+(246, 350, 1),
+(247, 351, 4),
+(248, 353, 1),
+(249, 354, 4),
+(250, 355, 7),
+(251, 356, 4),
+(252, 357, 4),
+(253, 359, 1),
+(254, 360, 1),
+(255, 362, 4),
+(256, 363, 1),
+(257, 365, 7),
+(346, 520, 9),
+(347, 508, 5),
+(348, 509, 10),
+(349, 510, 1),
+(350, 511, 1),
+(351, 512, 2),
+(352, 513, 11),
+(353, 514, 5),
+(354, 515, 7),
+(355, 516, 2),
+(356, 517, 5),
+(357, 518, 4),
+(358, 519, 8),
+(359, 521, 4),
+(360, 522, 10),
+(361, 523, 2),
+(362, 524, 11),
+(363, 525, 15),
+(364, 526, 14),
+(365, 527, 15),
+(366, 528, 14);
 
 -- --------------------------------------------------------
 
@@ -372,7 +496,9 @@ INSERT INTO `parsingbpmn_attribute` (`id`, `attribute_name`, `asset_type_id`, `a
 (10, 'Service typology\r\n', 5, 7),
 (11, 'Service typology\r\n', 5, 8),
 (12, 'Task type\r\n', 6, 9),
-(13, 'Task type\r\n', 7, 10);
+(13, 'Task type\r\n', 7, 10),
+(14, 'Communication typology', 1, 11),
+(15, 'Communication typology', 2, 11);
 
 -- --------------------------------------------------------
 
@@ -399,7 +525,8 @@ INSERT INTO `parsingbpmn_attribute_value` (`id`, `value`) VALUES
 (7, 'Statefull'),
 (8, 'Stateless'),
 (9, 'Script task'),
-(10, 'Business rule task');
+(10, 'Business rule task'),
+(11, 'Interoperability protocol');
 
 -- --------------------------------------------------------
 
@@ -452,6 +579,14 @@ CREATE TABLE `parsingbpmn_process` (
   `system_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Dump dei dati per la tabella `parsingbpmn_process`
+--
+
+INSERT INTO `parsingbpmn_process` (`id`, `name`, `xml`, `system_id`) VALUES
+(20, 'Optimization and innovation in the \"Nominations\" e-gov', 'processes/xml/Optimization_and_innovation_in_the_Nominations_e-gov.bpmn', 3),
+(28, 'Job Placement', 'processes/xml/Job_Placement.bpmn', 4);
+
 -- --------------------------------------------------------
 
 --
@@ -462,6 +597,14 @@ CREATE TABLE `parsingbpmn_system` (
   `id` int(11) NOT NULL,
   `name` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dump dei dati per la tabella `parsingbpmn_system`
+--
+
+INSERT INTO `parsingbpmn_system` (`id`, `name`) VALUES
+(3, 'Regione Campania'),
+(4, 'Unicampania');
 
 -- --------------------------------------------------------
 
@@ -694,7 +837,29 @@ INSERT INTO `parsingbpmn_threat_has_attribute` (`id`, `attribute_id`, `threat_id
 (120, 7, 41),
 (121, 8, 42),
 (122, 7, 53),
-(123, 8, 53);
+(123, 8, 53),
+(124, 14, 11),
+(125, 14, 17),
+(126, 14, 32),
+(127, 14, 33),
+(128, 14, 34),
+(129, 14, 35),
+(130, 14, 37),
+(131, 14, 41),
+(132, 14, 45),
+(133, 14, 49),
+(134, 14, 58),
+(135, 15, 17),
+(136, 15, 33),
+(137, 15, 34),
+(138, 15, 35),
+(139, 15, 37),
+(140, 15, 41),
+(141, 15, 45),
+(142, 15, 47),
+(143, 15, 49),
+(144, 15, 52),
+(145, 15, 58);
 
 -- --------------------------------------------------------
 
@@ -1350,13 +1515,13 @@ ALTER TABLE `django_migrations`
 -- AUTO_INCREMENT per la tabella `parsingbpmn_asset`
 --
 ALTER TABLE `parsingbpmn_asset`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=529;
 
 --
 -- AUTO_INCREMENT per la tabella `parsingbpmn_asset_has_attribute`
 --
 ALTER TABLE `parsingbpmn_asset_has_attribute`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=367;
 
 --
 -- AUTO_INCREMENT per la tabella `parsingbpmn_asset_type`
@@ -1368,13 +1533,13 @@ ALTER TABLE `parsingbpmn_asset_type`
 -- AUTO_INCREMENT per la tabella `parsingbpmn_attribute`
 --
 ALTER TABLE `parsingbpmn_attribute`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT per la tabella `parsingbpmn_attribute_value`
 --
 ALTER TABLE `parsingbpmn_attribute_value`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT per la tabella `parsingbpmn_control`
@@ -1386,13 +1551,13 @@ ALTER TABLE `parsingbpmn_control`
 -- AUTO_INCREMENT per la tabella `parsingbpmn_process`
 --
 ALTER TABLE `parsingbpmn_process`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 
 --
 -- AUTO_INCREMENT per la tabella `parsingbpmn_system`
 --
 ALTER TABLE `parsingbpmn_system`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT per la tabella `parsingbpmn_threat`
@@ -1404,7 +1569,7 @@ ALTER TABLE `parsingbpmn_threat`
 -- AUTO_INCREMENT per la tabella `parsingbpmn_threat_has_attribute`
 --
 ALTER TABLE `parsingbpmn_threat_has_attribute`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=124;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=146;
 
 --
 -- AUTO_INCREMENT per la tabella `parsingbpmn_threat_has_control`
